@@ -4,343 +4,402 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HR Zone Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg: #080a0f;
-  --surface: #0e1118;
-  --card: #12151e;
-  --border: #1c2030;
-  --border-bright: #2a3050;
-  --text: #dde2f0;
-  --muted: #4a526a;
-  --accent: #c8f135;
-  --z1: #60a5fa;
-  --z2: #34d399;
-  --z3: #fbbf24;
-  --z4: #fb923c;
-  --z5: #f87171;
+  --bg: #0D0D0D;
+  --surface: #111111;
+  --card: #181818;
+  --border: #272727;
+  --border-bright: #3A3A3A;
+  --text: #F0F0F0;
+  --text-2: #A8A8A8;
+  --muted: #5E5E5E;
+  --primary: #0077BC;
+  --primary-hover: #0088D4;
+  --primary-dim: rgba(0,119,188,0.12);
+  --secondary: #009866;
+  --secondary-dim: rgba(0,152,102,0.10);
+  --z1: #60A5FA;
+  --z2: #34D399;
+  --z3: #FBBF24;
+  --z4: #FB923C;
+  --z5: #F87171;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Syne', sans-serif;
+  font-family: 'Archivo', sans-serif;
   min-height: 100vh;
+  padding: 52px 20px 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 48px 20px 72px;
-  position: relative;
-  overflow-x: hidden;
-}
-
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(200,241,53,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(200,241,53,0.03) 1px, transparent 1px);
-  background-size: 48px 48px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-body::after {
-  content: '';
-  position: fixed;
-  top: -200px;
-  right: -200px;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(200,241,53,0.06) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
 }
 
 .container {
   width: 100%;
-  max-width: 740px;
-  position: relative;
-  z-index: 1;
+  max-width: 720px;
 }
 
-/* HEADER */
-.header { margin-bottom: 40px; }
+/* ── HEADER ── */
+.header { margin-bottom: 44px; }
 
 .eyebrow {
-  font-size: 0.72rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 10px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 16px;
 }
-.eyebrow::before {
-  content: '';
-  display: inline-block;
-  width: 20px;
-  height: 1px;
-  background: var(--accent);
+
+.eyebrow-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--primary);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,119,188,0.5); }
+  50% { box-shadow: 0 0 0 7px rgba(0,119,188,0); }
 }
 
 h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(3rem, 8vw, 5.5rem);
-  letter-spacing: 0.04em;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(2.8rem, 8vw, 5.2rem);
+  letter-spacing: -0.025em;
   line-height: 0.95;
   color: var(--text);
+  margin-bottom: 18px;
 }
-h1 em { color: var(--accent); font-style: normal; }
+
+h1 em {
+  color: var(--primary);
+  font-style: normal;
+}
 
 .tagline {
-  margin-top: 14px;
-  font-size: 0.88rem;
-  color: var(--muted);
-  line-height: 1.6;
-  max-width: 420px;
+  font-size: 1rem;
+  color: var(--text-2);
+  line-height: 1.65;
+  max-width: 460px;
   font-weight: 400;
 }
 
-/* INPUT PANEL */
+/* ── INPUT PANEL ── */
 .input-panel {
-  background: var(--card);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 28px 28px 24px;
+  padding: 32px;
   margin-bottom: 32px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 24px;
 }
 
 .field { display: flex; flex-direction: column; gap: 8px; }
 .field.full { grid-column: 1 / -1; }
 
 label {
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--muted);
-  font-weight: 600;
 }
 
 .input-wrap { position: relative; }
 
 input[type="number"] {
   width: 100%;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 13px 52px 13px 16px;
+  height: 52px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 0 52px 0 16px;
   color: var(--text);
-  font-family: 'Syne', sans-serif;
-  font-size: 1.05rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
   font-weight: 600;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.15s, box-shadow 0.15s;
   -moz-appearance: textfield;
 }
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+
 input[type="number"]:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(200,241,53,0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0,119,188,0.18);
 }
 
 .unit {
   position: absolute;
-  right: 14px;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 0.78rem;
+  font-size: 0.7rem;
+  font-weight: 700;
   color: var(--muted);
   pointer-events: none;
-  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.gender-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.height-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.gender-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
 
 .gender-btn {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 13px 16px;
+  height: 52px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
   color: var(--muted);
-  font-family: 'Syne', sans-serif;
-  font-size: 0.92rem;
-  font-weight: 600;
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   cursor: pointer;
-  transition: all 0.18s;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  letter-spacing: 0.04em;
-}
-.gender-btn:hover { border-color: var(--border-bright); color: var(--text); }
-.gender-btn.active {
-  background: rgba(200,241,53,0.08);
-  border-color: var(--accent);
-  color: var(--accent);
 }
 
-.height-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.gender-btn:hover {
+  border-color: var(--border-bright);
+  color: var(--text-2);
+}
+
+.gender-btn.active {
+  background: var(--primary-dim);
+  border-color: var(--primary);
+  color: var(--primary);
+}
 
 .calc-btn {
   grid-column: 1 / -1;
-  background: var(--accent);
+  height: 56px;
+  background: var(--primary);
   border: none;
-  border-radius: 10px;
-  padding: 16px;
-  color: #080a0f;
-  font-family: 'Syne', sans-serif;
-  font-size: 0.92rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  border-radius: 8px;
+  color: #fff;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.18s;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
-.calc-btn:hover {
-  background: #d4f84f;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(200,241,53,0.25);
-}
-.calc-btn:active { transform: translateY(0); }
 
-/* RESULTS */
+.calc-btn:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 8px 28px rgba(0,119,188,0.35);
+  transform: translateY(-1px);
+}
+
+.calc-btn:active { transform: translateY(0); box-shadow: none; }
+
+.calc-arrow { transition: transform 0.2s; }
+.calc-btn:hover .calc-arrow { transform: translateX(4px); }
+
+/* ── RESULTS ── */
 .results {
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 0.4s ease, transform 0.4s ease;
   pointer-events: none;
 }
+
 .results.visible {
   opacity: 1;
   transform: translateY(0);
   pointer-events: all;
 }
 
-/* Stats row */
+/* Stats strip */
 .stats-strip {
   display: flex;
-  gap: 10px;
-  margin-bottom: 24px;
   flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
 }
 
 .stat-chip {
-  background: var(--card);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 16px;
+  border-radius: 6px;
+  padding: 8px 14px;
   font-size: 0.78rem;
-  color: var(--muted);
   font-weight: 500;
+  color: var(--muted);
+  white-space: nowrap;
 }
-.stat-chip strong { color: var(--text); margin-left: 4px; }
+
+.stat-chip strong {
+  color: var(--text);
+  font-weight: 700;
+  margin-left: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
 .stat-chip.highlight {
-  border-color: rgba(200,241,53,0.3);
-  background: rgba(200,241,53,0.05);
-}
-.stat-chip.highlight strong { color: var(--accent); }
-
-/* Glossary button row */
-.glossary-btn-row {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 14px;
+  background: var(--primary-dim);
+  border-color: rgba(0,119,188,0.35);
 }
 
-.glossary-btn {
-  background: transparent;
-  border: 1px solid var(--border-bright);
-  border-radius: 8px;
-  padding: 8px 16px;
-  color: var(--muted);
-  font-family: 'Syne', sans-serif;
-  font-size: 0.76rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
+.stat-chip.highlight strong { color: var(--primary); }
+
+/* Section row */
+.section-row {
   display: flex;
   align-items: center;
-  gap: 7px;
-  transition: all 0.18s;
-}
-.glossary-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: rgba(200,241,53,0.05);
-}
-.glossary-btn svg {
-  width: 13px;
-  height: 13px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  flex-shrink: 0;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
-/* Section label */
 .section-label {
-  font-size: 0.7rem;
-  letter-spacing: 0.15em;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  white-space: nowrap;
 }
-.section-label::after {
-  content: '';
+
+.section-line {
   flex: 1;
   height: 1px;
   background: var(--border);
 }
 
-/* Zone bars */
-.zones-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
-
-.zone-item {
-  display: grid;
-  grid-template-columns: 90px 1fr 100px;
+.glossary-btn {
+  background: transparent;
+  border: 1px solid var(--border-bright);
+  border-radius: 6px;
+  padding: 7px 14px;
+  min-height: 36px;
+  color: var(--muted);
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 6px;
+  white-space: nowrap;
 }
 
-.zone-name-col { text-align: right; }
+.glossary-btn:hover { border-color: var(--primary); color: var(--primary); }
 
-.zone-number {
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
+.glossary-btn svg {
+  width: 12px;
+  height: 12px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ── ZONE CARDS ── */
+.zones-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.zone-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.15s;
+}
+
+.zone-card:hover { border-color: var(--border-bright); }
+
+.zone-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.zone-meta { display: flex; flex-direction: column; gap: 3px; }
+
+.zone-num {
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--muted);
-  font-weight: 600;
 }
 
-.zone-title {
-  font-size: 0.88rem;
-  font-weight: 700;
+.zone-name {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1rem;
   color: var(--text);
-  line-height: 1.2;
+  line-height: 1;
+}
+
+.zone-bpm { text-align: right; flex-shrink: 0; }
+
+.bpm-range {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.bpm-unit-label {
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 3px;
+  text-align: right;
 }
 
 .bar-track {
-  background: #11141d;
-  border-radius: 8px;
-  height: 44px;
+  background: #111;
+  border-radius: 6px;
+  height: 32px;
   position: relative;
   overflow: hidden;
   border: 1px solid var(--border);
@@ -348,61 +407,47 @@ input[type="number"]:focus {
 
 .bar-fill {
   height: 100%;
-  border-radius: 7px;
+  border-radius: 5px;
   position: absolute;
   left: 0;
   top: 0;
+  width: 0%;
   transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.bar-inner-text {
+.bar-text {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
-  padding: 0 14px;
-  font-size: 0.74rem;
+  padding: 0 12px;
+  font-size: 0.72rem;
   font-weight: 600;
   color: rgba(255,255,255,0.75);
+  pointer-events: none;
   white-space: nowrap;
   overflow: hidden;
-  pointer-events: none;
 }
 
-.zone-bpm-col { text-align: left; }
-
-.bpm-val {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.5rem;
-  letter-spacing: 0.04em;
-  line-height: 1;
-}
-
-.bpm-unit {
-  font-size: 0.72rem;
-  color: var(--muted);
-  letter-spacing: 0.06em;
-  font-weight: 500;
-}
-
-/* Fat loss banner */
+/* ── FAT BURN BANNER ── */
 .fat-banner {
-  background: linear-gradient(135deg, #0a1f10, #0c1a0c);
-  border: 1px solid #1e4a28;
-  border-radius: 14px;
+  background: var(--secondary-dim);
+  border: 1px solid rgba(0,152,102,0.22);
+  border-left: 4px solid var(--secondary);
+  border-radius: 12px;
   padding: 24px;
   margin-bottom: 28px;
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 18px;
+  grid-template-columns: 48px 1fr;
+  gap: 16px;
   align-items: start;
 }
 
 .banner-icon {
-  width: 46px;
-  height: 46px;
-  background: rgba(52,211,153,0.12);
-  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  background: rgba(0,152,102,0.15);
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -411,140 +456,146 @@ input[type="number"]:focus {
 }
 
 .banner-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.35rem;
-  letter-spacing: 0.06em;
-  color: #34d399;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1.1rem;
+  color: var(--secondary);
   margin-bottom: 8px;
+  letter-spacing: -0.01em;
 }
 
 .banner-body {
-  font-size: 0.83rem;
-  color: #5a9a72;
+  font-size: 0.875rem;
+  color: rgba(0,152,102,0.75);
   line-height: 1.65;
-  font-weight: 400;
 }
 
-.banner-body .hi { color: #34d399; font-weight: 700; }
+.banner-body .hi {
+  color: var(--secondary);
+  font-weight: 700;
+}
 
-/* BMI */
-.bmi-bar-wrap {
-  background: var(--card);
+/* ── BMI ── */
+.bmi-card {
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 22px 24px;
+  border-radius: 12px;
+  padding: 24px;
 }
 
-.bmi-header {
+.bmi-top {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
-.bmi-label {
-  font-size: 0.72rem;
+.bmi-card-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
   color: var(--muted);
-  font-weight: 600;
 }
 
-.bmi-value-display {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.8rem;
-  letter-spacing: 0.04em;
+.bmi-value {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 2rem;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 
 .bmi-scale {
   position: relative;
   height: 8px;
   border-radius: 8px;
-  background: linear-gradient(90deg, #60a5fa 0%, #34d399 25%, #fbbf24 50%, #fb923c 75%, #f87171 100%);
+  background: linear-gradient(90deg, #60A5FA 0%, #34D399 25%, #FBBF24 50%, #FB923C 75%, #F87171 100%);
   margin-bottom: 10px;
 }
 
 .bmi-marker {
   position: absolute;
-  top: -4px;
-  width: 16px;
-  height: 16px;
+  top: -5px;
+  width: 18px;
+  height: 18px;
   background: white;
   border-radius: 50%;
   transform: translateX(-50%);
-  box-shadow: 0 0 0 3px rgba(0,0,0,0.6), 0 0 12px rgba(255,255,255,0.4);
-  transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 0 12px rgba(255,255,255,0.3);
+  transition: left 0.6s cubic-bezier(0.16,1,0.3,1);
 }
 
-.bmi-labels {
+.bmi-ticks {
   display: flex;
   justify-content: space-between;
-  font-size: 0.68rem;
+  font-size: 0.67rem;
+  font-weight: 600;
   color: var(--muted);
-  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
-/* ─── GLOSSARY SECTION ─── */
+/* ── GLOSSARY ── */
 .glossary-section {
-  margin-top: 44px;
-  padding-top: 36px;
+  margin-top: 52px;
   border-top: 1px solid var(--border);
+  padding-top: 44px;
 }
 
-.glossary-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 8px;
-}
+.glossary-header { margin-bottom: 12px; }
 
 .glossary-header h2 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2.2rem;
-  letter-spacing: 0.06em;
-  color: var(--text);
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(1.7rem, 4vw, 2.2rem);
+  letter-spacing: -0.02em;
   line-height: 1;
+  color: var(--text);
+  display: inline;
 }
 
 .g-badge {
-  font-size: 0.68rem;
-  letter-spacing: 0.15em;
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent);
-  font-weight: 600;
-  border: 1px solid rgba(200,241,53,0.3);
+  color: var(--primary);
+  border: 1px solid rgba(0,119,188,0.35);
   border-radius: 4px;
-  padding: 2px 8px;
+  padding: 3px 9px;
+  margin-left: 12px;
+  vertical-align: middle;
+  position: relative;
+  top: -2px;
 }
 
 .glossary-intro {
-  font-size: 0.84rem;
-  color: var(--muted);
+  font-size: 0.875rem;
+  color: var(--text-2);
+  line-height: 1.65;
+  max-width: 520px;
+  margin-top: 12px;
   margin-bottom: 28px;
-  line-height: 1.6;
-  max-width: 500px;
 }
 
-.glossary-cards { display: flex; flex-direction: column; gap: 12px; }
+.glossary-cards { display: flex; flex-direction: column; gap: 10px; }
 
-/* Card shell */
 .g-card {
-  background: var(--card);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 12px;
   overflow: hidden;
   transition: border-color 0.2s;
 }
+
 .g-card:hover { border-color: var(--border-bright); }
 
-/* ── Card header: dot | info-block | chevron ── */
 .g-card-header {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 16px 18px;
+  padding: 18px 20px;
   cursor: pointer;
   user-select: none;
+  min-height: 64px;
 }
 
 .g-dot {
@@ -555,39 +606,35 @@ input[type="number"]:focus {
   box-shadow: 0 0 8px currentColor;
 }
 
-/* Middle block grows to fill available space */
 .g-info {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
 }
 
 .g-zone-num {
-  font-size: 0.65rem;
+  font-size: 0.63rem;
+  font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
-  font-weight: 600;
   line-height: 1;
 }
 
 .g-zone-name {
+  font-family: 'Archivo Black', sans-serif;
   font-size: 1rem;
-  font-weight: 700;
   color: var(--text);
   line-height: 1.1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* Badge sits on its own line inside .g-info */
 .g-pct-badge {
   display: inline-block;
   align-self: flex-start;
-  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.03em;
   padding: 3px 10px;
@@ -596,7 +643,6 @@ input[type="number"]:focus {
   white-space: nowrap;
 }
 
-/* Chevron always at the far right */
 .g-chevron {
   width: 18px;
   height: 18px;
@@ -608,61 +654,62 @@ input[type="number"]:focus {
   transition: transform 0.25s ease;
   flex-shrink: 0;
 }
+
 .g-card.open .g-chevron { transform: rotate(180deg); }
 
-/* Accordion body */
 .g-card-body {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1);
 }
-.g-card.open .g-card-body { max-height: 500px; }
+
+.g-card.open .g-card-body { max-height: 600px; }
 
 .g-card-body-inner {
   border-top: 1px solid var(--border);
-  padding: 18px 18px 22px;
+  padding: 20px;
 }
 
 .g-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px 18px;
+  gap: 12px 16px;
   margin-bottom: 16px;
 }
 
 .g-meta-item { display: flex; flex-direction: column; gap: 4px; }
 
 .g-meta-key {
-  font-size: 0.65rem;
+  font-size: 0.63rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--muted);
-  font-weight: 600;
 }
 
 .g-meta-val {
-  font-size: 0.84rem;
-  color: var(--text);
+  font-size: 0.85rem;
+  color: var(--text-2);
   font-weight: 500;
   line-height: 1.4;
 }
 
 .g-desc {
-  font-size: 0.83rem;
-  color: #7a849a;
+  font-size: 0.85rem;
+  color: var(--muted);
   line-height: 1.65;
   margin-bottom: 16px;
 }
 
-.g-activities { display: flex; flex-wrap: wrap; gap: 7px; }
+.g-activities { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .g-activity-tag {
-  background: var(--surface);
+  background: var(--card);
   border: 1px solid var(--border);
   border-radius: 20px;
-  padding: 4px 12px;
-  font-size: 0.74rem;
-  color: var(--muted);
+  padding: 5px 13px;
+  font-size: 0.72rem;
+  color: var(--text-2);
   font-weight: 500;
 }
 
@@ -671,20 +718,43 @@ input[type="number"]:focus {
   font-size: 0.71rem;
   color: var(--muted);
   text-align: center;
-  margin-top: 28px;
+  margin-top: 36px;
   line-height: 1.7;
   opacity: 0.6;
 }
 
-/* ─── RESPONSIVE ─── */
-@media (max-width: 520px) {
-  .input-panel { grid-template-columns: 1fr; }
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  body { padding: 28px 16px 60px; }
+
+  .input-panel {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 18px;
+  }
+
   .field.full { grid-column: 1; }
   .calc-btn { grid-column: 1; }
-  .zone-item { grid-template-columns: 72px 1fr 80px; gap: 8px; }
-  h1 { font-size: 2.8rem; }
+
+  .fat-banner {
+    grid-template-columns: 44px 1fr;
+    gap: 12px;
+    padding: 18px;
+  }
+
+  .banner-icon { width: 44px; height: 44px; font-size: 1.2rem; }
+
   .g-row { grid-template-columns: 1fr; }
-  .bmi-labels { font-size: 0.6rem; }
+
+  .bmi-ticks { font-size: 0.6rem; }
+
+  .section-row { flex-wrap: wrap; gap: 8px; }
+}
+
+@media (max-width: 380px) {
+  .height-row { grid-template-columns: 1fr; }
+  .gender-toggle { grid-template-columns: 1fr; }
+  .bpm-range { font-size: 1.1rem; }
 }
 </style>
 </head>
@@ -693,7 +763,10 @@ input[type="number"]:focus {
 
   <!-- HEADER -->
   <div class="header">
-    <div class="eyebrow">Fitness Tool</div>
+    <div class="eyebrow">
+      <span class="eyebrow-pulse"></span>
+      Fitness Tool
+    </div>
     <h1>Heart Rate<br><em>Zone</em> Calc</h1>
     <p class="tagline">Enter your stats and instantly see your personalized training zones — including the exact fat-burning range for your body.</p>
   </div>
@@ -702,7 +775,7 @@ input[type="number"]:focus {
   <div class="input-panel">
 
     <div class="field">
-      <label>Age</label>
+      <label for="age">Age</label>
       <div class="input-wrap">
         <input type="number" id="age" min="10" max="100" value="35" />
         <span class="unit">yrs</span>
@@ -710,7 +783,7 @@ input[type="number"]:focus {
     </div>
 
     <div class="field">
-      <label>Weight</label>
+      <label for="weight">Weight</label>
       <div class="input-wrap">
         <input type="number" id="weight" min="50" max="500" value="225" />
         <span class="unit">lbs</span>
@@ -732,14 +805,17 @@ input[type="number"]:focus {
     </div>
 
     <div class="field full">
-      <label>Gender</label>
+      <label>Biological Sex</label>
       <div class="gender-toggle">
         <button class="gender-btn active" id="btn-male" onclick="setGender('male')">♂ Male</button>
         <button class="gender-btn" id="btn-female" onclick="setGender('female')">♀ Female</button>
       </div>
     </div>
 
-    <button class="calc-btn" onclick="calculate()">Calculate My Zones →</button>
+    <button class="calc-btn" onclick="calculate()">
+      Calculate My Zones
+      <span class="calc-arrow">→</span>
+    </button>
 
   </div>
 
@@ -748,15 +824,15 @@ input[type="number"]:focus {
 
     <div class="stats-strip" id="statsStrip"></div>
 
-    <!-- Glossary shortcut button -->
-    <div class="glossary-btn-row">
+    <div class="section-row">
+      <span class="section-label">Training Zones</span>
+      <div class="section-line"></div>
       <button class="glossary-btn" onclick="document.getElementById('glossary').scrollIntoView({behavior:'smooth'})">
         <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
         Zone Glossary
       </button>
     </div>
 
-    <div class="section-label">Training Zones</div>
     <div class="zones-list" id="zonesList"></div>
 
     <div class="fat-banner">
@@ -767,15 +843,15 @@ input[type="number"]:focus {
       </div>
     </div>
 
-    <div class="bmi-bar-wrap">
-      <div class="bmi-header">
-        <span class="bmi-label">BMI</span>
-        <span class="bmi-value-display" id="bmiVal">—</span>
+    <div class="bmi-card">
+      <div class="bmi-top">
+        <span class="bmi-card-label">BMI</span>
+        <span class="bmi-value" id="bmiVal">—</span>
       </div>
       <div class="bmi-scale">
         <div class="bmi-marker" id="bmiMarker" style="left:0%"></div>
       </div>
-      <div class="bmi-labels">
+      <div class="bmi-ticks">
         <span>Underweight</span>
         <span>Normal</span>
         <span>Overweight</span>
@@ -783,7 +859,7 @@ input[type="number"]:focus {
       </div>
     </div>
 
-    <!-- ─── GLOSSARY ─── -->
+    <!-- GLOSSARY -->
     <div class="glossary-section" id="glossary">
       <div class="glossary-header">
         <h2>Zone Glossary</h2>
@@ -796,11 +872,11 @@ input[type="number"]:focus {
         <!-- Zone 1 -->
         <div class="g-card" id="gc1">
           <div class="g-card-header" onclick="toggleCard('gc1')">
-            <div class="g-dot" style="color:#60a5fa;background:#60a5fa"></div>
+            <div class="g-dot" style="color:#60A5FA;background:#60A5FA"></div>
             <div class="g-info">
               <span class="g-zone-num">Zone 1</span>
               <span class="g-zone-name">Warm-Up</span>
-              <span class="g-pct-badge" style="color:#60a5fa;border-color:#60a5fa55;background:rgba(96,165,250,0.08)">50–60% Max HR</span>
+              <span class="g-pct-badge" style="color:#60A5FA;border-color:#60A5FA44;background:rgba(96,165,250,0.08)">50–60% Max HR</span>
             </div>
             <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
@@ -827,11 +903,11 @@ input[type="number"]:focus {
         <!-- Zone 2 -->
         <div class="g-card" id="gc2">
           <div class="g-card-header" onclick="toggleCard('gc2')">
-            <div class="g-dot" style="color:#34d399;background:#34d399"></div>
+            <div class="g-dot" style="color:#34D399;background:#34D399"></div>
             <div class="g-info">
               <span class="g-zone-num">Zone 2</span>
               <span class="g-zone-name">Fat Burn ★</span>
-              <span class="g-pct-badge" style="color:#34d399;border-color:#34d39955;background:rgba(52,211,153,0.08)">60–70% Max HR</span>
+              <span class="g-pct-badge" style="color:#34D399;border-color:#34D39944;background:rgba(52,211,153,0.08)">60–70% Max HR</span>
             </div>
             <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
@@ -859,11 +935,11 @@ input[type="number"]:focus {
         <!-- Zone 3 -->
         <div class="g-card" id="gc3">
           <div class="g-card-header" onclick="toggleCard('gc3')">
-            <div class="g-dot" style="color:#fbbf24;background:#fbbf24"></div>
+            <div class="g-dot" style="color:#FBBF24;background:#FBBF24"></div>
             <div class="g-info">
               <span class="g-zone-num">Zone 3</span>
               <span class="g-zone-name">Aerobic</span>
-              <span class="g-pct-badge" style="color:#fbbf24;border-color:#fbbf2455;background:rgba(251,191,36,0.08)">70–80% Max HR</span>
+              <span class="g-pct-badge" style="color:#FBBF24;border-color:#FBBF2444;background:rgba(251,191,36,0.08)">70–80% Max HR</span>
             </div>
             <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
@@ -891,11 +967,11 @@ input[type="number"]:focus {
         <!-- Zone 4 -->
         <div class="g-card" id="gc4">
           <div class="g-card-header" onclick="toggleCard('gc4')">
-            <div class="g-dot" style="color:#fb923c;background:#fb923c"></div>
+            <div class="g-dot" style="color:#FB923C;background:#FB923C"></div>
             <div class="g-info">
               <span class="g-zone-num">Zone 4</span>
               <span class="g-zone-name">Threshold</span>
-              <span class="g-pct-badge" style="color:#fb923c;border-color:#fb923c55;background:rgba(251,146,60,0.08)">80–90% Max HR</span>
+              <span class="g-pct-badge" style="color:#FB923C;border-color:#FB923C44;background:rgba(251,146,60,0.08)">80–90% Max HR</span>
             </div>
             <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
@@ -923,11 +999,11 @@ input[type="number"]:focus {
         <!-- Zone 5 -->
         <div class="g-card" id="gc5">
           <div class="g-card-header" onclick="toggleCard('gc5')">
-            <div class="g-dot" style="color:#f87171;background:#f87171"></div>
+            <div class="g-dot" style="color:#F87171;background:#F87171"></div>
             <div class="g-info">
               <span class="g-zone-num">Zone 5</span>
               <span class="g-zone-name">Max Effort</span>
-              <span class="g-pct-badge" style="color:#f87171;border-color:#f8717155;background:rgba(248,113,113,0.08)">90–100% Max HR</span>
+              <span class="g-pct-badge" style="color:#F87171;border-color:#F8717144;background:rgba(248,113,113,0.08)">90–100% Max HR</span>
             </div>
             <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
@@ -974,11 +1050,11 @@ function setGender(g) {
 }
 
 const ZONES = [
-  { name: 'Zone 1', sub: 'Warm-Up',    pctLow: 50, pctHigh: 60, color: '#60a5fa', desc: 'Active recovery · Easy walks' },
-  { name: 'Zone 2', sub: 'Fat Burn ★', pctLow: 60, pctHigh: 70, color: '#34d399', desc: 'Peak fat oxidation · Conversational pace', isFat: true },
-  { name: 'Zone 3', sub: 'Aerobic',    pctLow: 70, pctHigh: 80, color: '#fbbf24', desc: 'Cardio endurance · Moderate effort', isFat: true },
-  { name: 'Zone 4', sub: 'Threshold',  pctLow: 80, pctHigh: 90, color: '#fb923c', desc: 'Lactate threshold · HIIT intervals' },
-  { name: 'Zone 5', sub: 'Max Effort', pctLow: 90, pctHigh:100, color: '#f87171', desc: 'All-out sprints · Short bursts only' },
+  { name: 'Zone 1', sub: 'Warm-Up',    pctLow: 50, pctHigh: 60, color: '#60A5FA', desc: 'Active recovery · Easy walks' },
+  { name: 'Zone 2', sub: 'Fat Burn ★', pctLow: 60, pctHigh: 70, color: '#34D399', desc: 'Peak fat oxidation · Conversational pace', isFat: true },
+  { name: 'Zone 3', sub: 'Aerobic',    pctLow: 70, pctHigh: 80, color: '#FBBF24', desc: 'Cardio endurance · Moderate effort', isFat: true },
+  { name: 'Zone 4', sub: 'Threshold',  pctLow: 80, pctHigh: 90, color: '#FB923C', desc: 'Lactate threshold · HIIT intervals' },
+  { name: 'Zone 5', sub: 'Max Effort', pctLow: 90, pctHigh:100, color: '#F87171', desc: 'All-out sprints · Short bursts only' },
 ];
 
 function calculate() {
@@ -1010,32 +1086,34 @@ function calculate() {
     strip.appendChild(el);
   });
 
-  // Zone bars
+  // Zone cards
   const list = document.getElementById('zonesList');
   list.innerHTML = '';
-  ZONES.forEach((z, i) => {
+  ZONES.forEach(z => {
     const bpmLow  = Math.round(maxHR * z.pctLow  / 100);
     const bpmHigh = Math.round(maxHR * z.pctHigh / 100);
     const item = document.createElement('div');
-    item.className = 'zone-item';
+    item.className = 'zone-card';
     item.innerHTML = `
-      <div class="zone-name-col">
-        <div class="zone-number">${z.name}</div>
-        <div class="zone-title">${z.sub}</div>
+      <div class="zone-top-row">
+        <div class="zone-meta">
+          <div class="zone-num">${z.name}</div>
+          <div class="zone-name">${z.sub}</div>
+        </div>
+        <div class="zone-bpm">
+          <div class="bpm-range" style="color:${z.color}">${bpmLow}–${bpmHigh}</div>
+          <div class="bpm-unit-label">bpm</div>
+        </div>
       </div>
       <div class="bar-track">
         <div class="bar-fill" style="
-          width: 0%;
-          background: ${z.isFat
-            ? `linear-gradient(90deg, ${z.color}aa, ${z.color})`
-            : `linear-gradient(90deg, ${z.color}66, ${z.color}99)`};
-          ${z.isFat ? `box-shadow: 0 0 20px 2px ${z.color}44;` : ''}
+          width:0%;
+          background:${z.isFat
+            ? `linear-gradient(90deg,${z.color}88,${z.color})`
+            : `linear-gradient(90deg,${z.color}44,${z.color}88)`};
+          ${z.isFat ? `box-shadow:0 0 20px ${z.color}33;` : ''}
         " data-target="${z.pctHigh}"></div>
-        <div class="bar-inner-text">${z.pctLow}–${z.pctHigh}% · ${z.desc}</div>
-      </div>
-      <div class="zone-bpm-col">
-        <div class="bpm-val" style="color:${z.color}">${bpmLow}–${bpmHigh}</div>
-        <div class="bpm-unit">bpm</div>
+        <div class="bar-text">${z.pctLow}–${z.pctHigh}% · ${z.desc}</div>
       </div>
     `;
     list.appendChild(item);
@@ -1065,7 +1143,7 @@ function calculate() {
   document.getElementById('bmiVal').textContent = bmiRounded;
   const bmiPct = Math.min(100, Math.max(0, ((bmi - 16) / 24) * 100));
   document.getElementById('bmiMarker').style.left = bmiPct + '%';
-  let bmiColor = bmi < 18.5 ? '#60a5fa' : bmi < 25 ? '#34d399' : bmi < 30 ? '#fbbf24' : '#f87171';
+  const bmiColor = bmi < 18.5 ? '#60A5FA' : bmi < 25 ? '#34D399' : bmi < 30 ? '#FBBF24' : '#F87171';
   document.getElementById('bmiVal').style.color = bmiColor;
 
   // Show results
