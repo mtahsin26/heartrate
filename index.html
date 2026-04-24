@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HR Zone Calculator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #080a0f;
+  --surface: #0e1118;
+  --card: #12151e;
+  --border: #1c2030;
+  --border-bright: #2a3050;
+  --text: #dde2f0;
+  --muted: #4a526a;
+  --accent: #c8f135;
+  --z1: #60a5fa;
+  --z2: #34d399;
+  --z3: #fbbf24;
+  --z4: #fb923c;
+  --z5: #f87171;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 20px 72px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(200,241,53,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,241,53,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: -200px;
+  right: -200px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(200,241,53,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  width: 100%;
+  max-width: 740px;
+  position: relative;
+  z-index: 1;
+}
+
+/* HEADER */
+.header { margin-bottom: 40px; }
+
+.eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: var(--accent);
+}
+
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  letter-spacing: 0.04em;
+  line-height: 0.95;
+  color: var(--text);
+}
+h1 em { color: var(--accent); font-style: normal; }
+
+.tagline {
+  margin-top: 14px;
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 420px;
+  font-weight: 400;
+}
+
+/* INPUT PANEL */
+.input-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 28px 24px;
+  margin-bottom: 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field.full { grid-column: 1 / -1; }
+
+label {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.input-wrap { position: relative; }
+
+input[type="number"] {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 52px 13px 16px;
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -moz-appearance: textfield;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+input[type="number"]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(200,241,53,0.1);
+}
+
+.unit {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.78rem;
+  color: var(--muted);
+  pointer-events: none;
+  font-weight: 500;
+}
+
+.gender-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.gender-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 16px;
+  color: var(--muted);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  letter-spacing: 0.04em;
+}
+.gender-btn:hover { border-color: var(--border-bright); color: var(--text); }
+.gender-btn.active {
+  background: rgba(200,241,53,0.08);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.height-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.calc-btn {
+  grid-column: 1 / -1;
+  background: var(--accent);
+  border: none;
+  border-radius: 10px;
+  padding: 16px;
+  color: #080a0f;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.calc-btn:hover {
+  background: #d4f84f;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(200,241,53,0.25);
+}
+.calc-btn:active { transform: translateY(0); }
+
+/* RESULTS */
+.results {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+.results.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+/* Stats row */
+.stats-strip {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.stat-chip {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+.stat-chip strong { color: var(--text); margin-left: 4px; }
+.stat-chip.highlight {
+  border-color: rgba(200,241,53,0.3);
+  background: rgba(200,241,53,0.05);
+}
+.stat-chip.highlight strong { color: var(--accent); }
+
+/* Glossary button row */
+.glossary-btn-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+
+.glossary-btn {
+  background: transparent;
+  border: 1px solid var(--border-bright);
+  border-radius: 8px;
+  padding: 8px 16px;
+  color: var(--muted);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.18s;
+}
+.glossary-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(200,241,53,0.05);
+}
+.glossary-btn svg {
+  width: 13px;
+  height: 13px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+/* Section label */
+.section-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Zone bars */
+.zones-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+
+.zone-item {
+  display: grid;
+  grid-template-columns: 90px 1fr 100px;
+  align-items: center;
+  gap: 14px;
+}
+
+.zone-name-col { text-align: right; }
+
+.zone-number {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.zone-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.bar-track {
+  background: #11141d;
+  border-radius: 8px;
+  height: 44px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 7px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bar-inner-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.75);
+  white-space: nowrap;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.zone-bpm-col { text-align: left; }
+
+.bpm-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.bpm-unit {
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+
+/* Fat loss banner */
+.fat-banner {
+  background: linear-gradient(135deg, #0a1f10, #0c1a0c);
+  border: 1px solid #1e4a28;
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 28px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.banner-icon {
+  width: 46px;
+  height: 46px;
+  background: rgba(52,211,153,0.12);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.banner-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
+  color: #34d399;
+  margin-bottom: 8px;
+}
+
+.banner-body {
+  font-size: 0.83rem;
+  color: #5a9a72;
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+.banner-body .hi { color: #34d399; font-weight: 700; }
+
+/* BMI */
+.bmi-bar-wrap {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px 24px;
+}
+
+.bmi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+}
+
+.bmi-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.bmi-value-display {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.04em;
+}
+
+.bmi-scale {
+  position: relative;
+  height: 8px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #60a5fa 0%, #34d399 25%, #fbbf24 50%, #fb923c 75%, #f87171 100%);
+  margin-bottom: 10px;
+}
+
+.bmi-marker {
+  position: absolute;
+  top: -4px;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.6), 0 0 12px rgba(255,255,255,0.4);
+  transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bmi-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* ─── GLOSSARY SECTION ─── */
+.glossary-section {
+  margin-top: 44px;
+  padding-top: 36px;
+  border-top: 1px solid var(--border);
+}
+
+.glossary-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.glossary-header h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  line-height: 1;
+}
+
+.g-badge {
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  border: 1px solid rgba(200,241,53,0.3);
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.glossary-intro {
+  font-size: 0.84rem;
+  color: var(--muted);
+  margin-bottom: 28px;
+  line-height: 1.6;
+  max-width: 500px;
+}
+
+.glossary-cards { display: flex; flex-direction: column; gap: 12px; }
+
+/* Card shell */
+.g-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.g-card:hover { border-color: var(--border-bright); }
+
+/* ── Card header: dot | info-block | chevron ── */
+.g-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.g-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px currentColor;
+}
+
+/* Middle block grows to fill available space */
+.g-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.g-zone-num {
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.g-zone-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Badge sits on its own line inside .g-info */
+.g-pct-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+/* Chevron always at the far right */
+.g-chevron {
+  width: 18px;
+  height: 18px;
+  stroke: var(--muted);
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+.g-card.open .g-chevron { transform: rotate(180deg); }
+
+/* Accordion body */
+.g-card-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.g-card.open .g-card-body { max-height: 500px; }
+
+.g-card-body-inner {
+  border-top: 1px solid var(--border);
+  padding: 18px 18px 22px;
+}
+
+.g-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 18px;
+  margin-bottom: 16px;
+}
+
+.g-meta-item { display: flex; flex-direction: column; gap: 4px; }
+
+.g-meta-key {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.g-meta-val {
+  font-size: 0.84rem;
+  color: var(--text);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.g-desc {
+  font-size: 0.83rem;
+  color: #7a849a;
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+
+.g-activities { display: flex; flex-wrap: wrap; gap: 7px; }
+
+.g-activity-tag {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.74rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* Disclaimer */
+.disclaimer {
+  font-size: 0.71rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 28px;
+  line-height: 1.7;
+  opacity: 0.6;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 520px) {
+  .input-panel { grid-template-columns: 1fr; }
+  .field.full { grid-column: 1; }
+  .calc-btn { grid-column: 1; }
+  .zone-item { grid-template-columns: 72px 1fr 80px; gap: 8px; }
+  h1 { font-size: 2.8rem; }
+  .g-row { grid-template-columns: 1fr; }
+  .bmi-labels { font-size: 0.6rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="eyebrow">Fitness Tool</div>
+    <h1>Heart Rate<br><em>Zone</em> Calc</h1>
+    <p class="tagline">Enter your stats and instantly see your personalized training zones — including the exact fat-burning range for your body.</p>
+  </div>
+
+  <!-- INPUT PANEL -->
+  <div class="input-panel">
+
+    <div class="field">
+      <label>Age</label>
+      <div class="input-wrap">
+        <input type="number" id="age" min="10" max="100" value="35" />
+        <span class="unit">yrs</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Weight</label>
+      <div class="input-wrap">
+        <input type="number" id="weight" min="50" max="500" value="225" />
+        <span class="unit">lbs</span>
+      </div>
+    </div>
+
+    <div class="field full">
+      <label>Height</label>
+      <div class="height-row">
+        <div class="input-wrap">
+          <input type="number" id="feet" min="3" max="8" value="5" />
+          <span class="unit">ft</span>
+        </div>
+        <div class="input-wrap">
+          <input type="number" id="inches" min="0" max="11" value="9" />
+          <span class="unit">in</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="field full">
+      <label>Gender</label>
+      <div class="gender-toggle">
+        <button class="gender-btn active" id="btn-male" onclick="setGender('male')">♂ Male</button>
+        <button class="gender-btn" id="btn-female" onclick="setGender('female')">♀ Female</button>
+      </div>
+    </div>
+
+    <button class="calc-btn" onclick="calculate()">Calculate My Zones →</button>
+
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results">
+
+    <div class="stats-strip" id="statsStrip"></div>
+
+    <!-- Glossary shortcut button -->
+    <div class="glossary-btn-row">
+      <button class="glossary-btn" onclick="document.getElementById('glossary').scrollIntoView({behavior:'smooth'})">
+        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Zone Glossary
+      </button>
+    </div>
+
+    <div class="section-label">Training Zones</div>
+    <div class="zones-list" id="zonesList"></div>
+
+    <div class="fat-banner">
+      <div class="banner-icon">🔥</div>
+      <div>
+        <div class="banner-title">Your Fat Loss Zone</div>
+        <div class="banner-body" id="fatBannerBody"></div>
+      </div>
+    </div>
+
+    <div class="bmi-bar-wrap">
+      <div class="bmi-header">
+        <span class="bmi-label">BMI</span>
+        <span class="bmi-value-display" id="bmiVal">—</span>
+      </div>
+      <div class="bmi-scale">
+        <div class="bmi-marker" id="bmiMarker" style="left:0%"></div>
+      </div>
+      <div class="bmi-labels">
+        <span>Underweight</span>
+        <span>Normal</span>
+        <span>Overweight</span>
+        <span>Obese</span>
+      </div>
+    </div>
+
+    <!-- ─── GLOSSARY ─── -->
+    <div class="glossary-section" id="glossary">
+      <div class="glossary-header">
+        <h2>Zone Glossary</h2>
+        <span class="g-badge">Reference</span>
+      </div>
+      <p class="glossary-intro">A breakdown of each heart rate training zone — what's happening in your body, when to use it, and which activities naturally put you there.</p>
+
+      <div class="glossary-cards">
+
+        <!-- Zone 1 -->
+        <div class="g-card" id="gc1">
+          <div class="g-card-header" onclick="toggleCard('gc1')">
+            <div class="g-dot" style="color:#60a5fa;background:#60a5fa"></div>
+            <div class="g-info">
+              <span class="g-zone-num">Zone 1</span>
+              <span class="g-zone-name">Warm-Up</span>
+              <span class="g-pct-badge" style="color:#60a5fa;border-color:#60a5fa55;background:rgba(96,165,250,0.08)">50–60% Max HR</span>
+            </div>
+            <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="g-card-body">
+            <div class="g-card-body-inner">
+              <div class="g-row">
+                <div class="g-meta-item"><span class="g-meta-key">Energy Source</span><span class="g-meta-val">Primarily fat (~85%)</span></div>
+                <div class="g-meta-item"><span class="g-meta-key">Feel</span><span class="g-meta-val">Very easy, effortless breathing</span></div>
+                <div class="g-meta-item"><span class="g-meta-key">Best For</span><span class="g-meta-val">Warm-up, cool-down, active recovery</span></div>
+                <div class="g-meta-item"><span class="g-meta-key">Duration</span><span class="g-meta-val">5–20 min (prep/recovery)</span></div>
+              </div>
+              <p class="g-desc">Zone 1 is the gentlest end of aerobic training. Your cardiovascular system is active but under little stress. Blood flow increases to warm muscles, oxygen delivery ramps up, and your body begins mobilizing fat stores. This zone is essential before and after harder efforts — skipping it increases injury risk and slows recovery.</p>
+              <div class="g-activities">
+                <span class="g-activity-tag">Easy walk</span>
+                <span class="g-activity-tag">Light stretching</span>
+                <span class="g-activity-tag">Casual cycling</span>
+                <span class="g-activity-tag">Slow swimming</span>
+                <span class="g-activity-tag">Cool-down jog</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zone 2 -->
+        <div class="g-card" id="gc2">
+          <div class="g-card-header" onclick="toggleCard('gc2')">
+            <div class="g-dot" style="color:#34d399;background:#34d399"></div>
+            <div class="g-info">
+              <span class="g-zone-num">Zone 2</span>
+              <span class="g-zone-name">Fat Burn ★</span>
+              <span class="g-pct-badge" style="color:#34d399;border-color:#34d39955;background:rgba(52,211,153,0.08)">60–70% Max HR</span>
+            </div>
+            <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="g-card-body">
+            <div class="g-card-body-inner">
+              <div class="g-row">
+                <div class="g-meta-item"><span class="g-meta-key">Energy Source</span><span class="g-meta-val">Fat (~65%) + Carbs (~35%)</span></div>
+                <div class="g-meta-item"><span class="g-meta-key">Feel</span><span class="g-meta-val">Comfortable, can hold a conversation</span></div>
+                <div class="g-meta-item"><span class="g-meta-key">Best For</span><span class="g-meta-val">Fat loss, base aerobic fitness</span></div>
+                <div class="g-meta-item"><span class="g-meta-key">Duration</span><span class="g-meta-val">30–90 min sustained</span></div>
+              </div>
+              <p class="g-desc">This is the sweet spot for fat loss and long-term aerobic base building. At 60–70% max HR, your body relies heavily on fat oxidation as the primary fuel. Mitochondria in muscle cells become more efficient, and your cardiovascular system strengthens without excessive stress. The "talk test" applies here — you can speak in full sentences. Sustainable enough to train in most days of the week.</p>
+              <div class="g-activities">
+                <span class="g-activity-tag">Brisk walk</span>
+                <span class="g-activity-tag">Light jog</span>
+                <span class="g-activity-tag">Easy cycling</span>
+                <span class="g-activity-tag">Elliptical</span>
+                <span class="g-activity-tag">Incline treadmill</span>
+                <span class="g-activity-tag">Casual swim laps</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zone 3 -->
+        <div class="g-card" id="gc3">
+          <div class="g-card-header" onclick="toggleCard('gc3')">
+            <div class="g-dot" style="color:#fbbf24;background:#fbbf24"></div>
+            <div class="g-info">
+              <span class="g-zone-num">Zone 3</span>
+              <span class="g-zone-name">Aerobic</span>
+              <span class="g-pct-badge" style="color:#fbbf24;border-color:#fbbf2455;background:rgba(251,191,36,0.08)">70–80% Max HR</span>
+            </div>
+            <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="g-card-body">
+            <div class="g-card-body-inner">
+              <div class="g-row">
+                <div class="g-meta-item"><span class="g-meta-key">Energy Source</span><span class="g-meta-val">Fat (~45%) + Carbs (~55%)</span></div>
+                <div class="g-meta-item"><span class="g-meta-key">Feel</span><span class="g-meta-val">Moderate effort, shorter sentences</span></div>
+                <div class="g-meta-item"><span class="g-meta-key">Best For</span><span class="g-meta-val">Cardiovascular endurance, stamina</span></div>
+                <div class="g-meta-item"><span class="g-meta-key">Duration</span><span class="g-meta-val">20–60 min</span></div>
+              </div>
+              <p class="g-desc">Zone 3 bridges fat burning and true cardio conditioning. Fat is still a significant fuel source, but carbohydrates begin to take over. Your heart and lungs are working noticeably harder — breathing becomes deeper and rhythmic. This zone improves VO2 max over time, increases cardiovascular efficiency, and burns a high total calorie count. Best used 2–3 days per week.</p>
+              <div class="g-activities">
+                <span class="g-activity-tag">Steady-state run</span>
+                <span class="g-activity-tag">Moderate cycling</span>
+                <span class="g-activity-tag">Rowing machine</span>
+                <span class="g-activity-tag">Swim intervals</span>
+                <span class="g-activity-tag">Dance cardio</span>
+                <span class="g-activity-tag">Hiking</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zone 4 -->
+        <div class="g-card" id="gc4">
+          <div class="g-card-header" onclick="toggleCard('gc4')">
+            <div class="g-dot" style="color:#fb923c;background:#fb923c"></div>
+            <div class="g-info">
+              <span class="g-zone-num">Zone 4</span>
+              <span class="g-zone-name">Threshold</span>
+              <span class="g-pct-badge" style="color:#fb923c;border-color:#fb923c55;background:rgba(251,146,60,0.08)">80–90% Max HR</span>
+            </div>
+            <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="g-card-body">
+            <div class="g-card-body-inner">
+              <div class="g-row">
+                <div class="g-meta-item"><span class="g-meta-key">Energy Source</span><span class="g-meta-val">Primarily carbs (~80%)</span></div>
+                <div class="g-meta-item"><span class="g-meta-key">Feel</span><span class="g-meta-val">Hard, labored breathing, few words</span></div>
+                <div class="g-meta-item"><span class="g-meta-key">Best For</span><span class="g-meta-val">Speed, performance, HIIT</span></div>
+                <div class="g-meta-item"><span class="g-meta-key">Duration</span><span class="g-meta-val">10–30 min (intervals)</span></div>
+              </div>
+              <p class="g-desc">Zone 4 is where you push past your comfort zone. You're approaching your lactate threshold — the point where lactic acid accumulates faster than your body can clear it, causing that familiar burn. Carbohydrates become the dominant fuel. Training here raises your lactate threshold so you can sustain harder efforts longer. Keep sessions to 1–2 times per week; recovery is essential.</p>
+              <div class="g-activities">
+                <span class="g-activity-tag">HIIT intervals</span>
+                <span class="g-activity-tag">Tempo run</span>
+                <span class="g-activity-tag">Fast cycling</span>
+                <span class="g-activity-tag">Circuit training</span>
+                <span class="g-activity-tag">Hard rowing</span>
+                <span class="g-activity-tag">Hill repeats</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zone 5 -->
+        <div class="g-card" id="gc5">
+          <div class="g-card-header" onclick="toggleCard('gc5')">
+            <div class="g-dot" style="color:#f87171;background:#f87171"></div>
+            <div class="g-info">
+              <span class="g-zone-num">Zone 5</span>
+              <span class="g-zone-name">Max Effort</span>
+              <span class="g-pct-badge" style="color:#f87171;border-color:#f8717155;background:rgba(248,113,113,0.08)">90–100% Max HR</span>
+            </div>
+            <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="g-card-body">
+            <div class="g-card-body-inner">
+              <div class="g-row">
+                <div class="g-meta-item"><span class="g-meta-key">Energy Source</span><span class="g-meta-val">Almost entirely carbs (~95%)</span></div>
+                <div class="g-meta-item"><span class="g-meta-key">Feel</span><span class="g-meta-val">All-out, unsustainable, gasping</span></div>
+                <div class="g-meta-item"><span class="g-meta-key">Best For</span><span class="g-meta-val">Peak power, sprint capacity</span></div>
+                <div class="g-meta-item"><span class="g-meta-key">Duration</span><span class="g-meta-val">10–60 seconds at a time</span></div>
+              </div>
+              <p class="g-desc">Zone 5 is true maximum effort — an unsustainable intensity you can only hold for seconds to a minute at most. Your anaerobic system is dominant, glycogen burns at maximum rate, and lactic acid floods your muscles rapidly. This zone develops explosive power, fast-twitch muscle recruitment, and peak athletic performance. It is not a fat-burning zone. Full recovery between efforts is non-negotiable.</p>
+              <div class="g-activities">
+                <span class="g-activity-tag">All-out sprints</span>
+                <span class="g-activity-tag">Plyometrics</span>
+                <span class="g-activity-tag">Max effort bike</span>
+                <span class="g-activity-tag">Battle ropes</span>
+                <span class="g-activity-tag">100m dash</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- END GLOSSARY -->
+
+    <p class="disclaimer">
+      Max HR estimated via 220 − age (Tanaka formula for females: 206 − 0.88 × age).<br>
+      Individual max HR varies ±10–20 bpm. Consult a physician before starting a new exercise program.
+    </p>
+
+  </div>
+
+</div>
+
+<script>
+let gender = 'male';
+
+function setGender(g) {
+  gender = g;
+  document.getElementById('btn-male').classList.toggle('active', g === 'male');
+  document.getElementById('btn-female').classList.toggle('active', g === 'female');
+}
+
+const ZONES = [
+  { name: 'Zone 1', sub: 'Warm-Up',    pctLow: 50, pctHigh: 60, color: '#60a5fa', desc: 'Active recovery · Easy walks' },
+  { name: 'Zone 2', sub: 'Fat Burn ★', pctLow: 60, pctHigh: 70, color: '#34d399', desc: 'Peak fat oxidation · Conversational pace', isFat: true },
+  { name: 'Zone 3', sub: 'Aerobic',    pctLow: 70, pctHigh: 80, color: '#fbbf24', desc: 'Cardio endurance · Moderate effort', isFat: true },
+  { name: 'Zone 4', sub: 'Threshold',  pctLow: 80, pctHigh: 90, color: '#fb923c', desc: 'Lactate threshold · HIIT intervals' },
+  { name: 'Zone 5', sub: 'Max Effort', pctLow: 90, pctHigh:100, color: '#f87171', desc: 'All-out sprints · Short bursts only' },
+];
+
+function calculate() {
+  const age    = parseInt(document.getElementById('age').value)    || 30;
+  const weight = parseInt(document.getElementById('weight').value) || 150;
+  const feet   = parseInt(document.getElementById('feet').value)   || 5;
+  const inches = parseInt(document.getElementById('inches').value) || 7;
+
+  const maxHR = gender === 'female'
+    ? Math.round(206 - 0.88 * age)
+    : Math.round(220 - age);
+
+  const totalInches = feet * 12 + inches;
+  const bmi = (703 * weight) / (totalInches * totalInches);
+
+  // Stats strip
+  const strip = document.getElementById('statsStrip');
+  strip.innerHTML = '';
+  [
+    { label: 'Age',    val: `${age} yrs` },
+    { label: 'Weight', val: `${weight} lbs` },
+    { label: 'Height', val: `${feet}'${inches}"` },
+    { label: 'Sex',    val: gender === 'male' ? 'Male' : 'Female' },
+    { label: 'Max HR', val: `${maxHR} bpm`, highlight: true },
+  ].forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'stat-chip' + (c.highlight ? ' highlight' : '');
+    el.innerHTML = `${c.label} <strong>${c.val}</strong>`;
+    strip.appendChild(el);
+  });
+
+  // Zone bars
+  const list = document.getElementById('zonesList');
+  list.innerHTML = '';
+  ZONES.forEach((z, i) => {
+    const bpmLow  = Math.round(maxHR * z.pctLow  / 100);
+    const bpmHigh = Math.round(maxHR * z.pctHigh / 100);
+    const item = document.createElement('div');
+    item.className = 'zone-item';
+    item.innerHTML = `
+      <div class="zone-name-col">
+        <div class="zone-number">${z.name}</div>
+        <div class="zone-title">${z.sub}</div>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" style="
+          width: 0%;
+          background: ${z.isFat
+            ? `linear-gradient(90deg, ${z.color}aa, ${z.color})`
+            : `linear-gradient(90deg, ${z.color}66, ${z.color}99)`};
+          ${z.isFat ? `box-shadow: 0 0 20px 2px ${z.color}44;` : ''}
+        " data-target="${z.pctHigh}"></div>
+        <div class="bar-inner-text">${z.pctLow}–${z.pctHigh}% · ${z.desc}</div>
+      </div>
+      <div class="zone-bpm-col">
+        <div class="bpm-val" style="color:${z.color}">${bpmLow}–${bpmHigh}</div>
+        <div class="bpm-unit">bpm</div>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+
+  setTimeout(() => {
+    document.querySelectorAll('.bar-fill').forEach(el => {
+      el.style.width = el.dataset.target + '%';
+    });
+  }, 50);
+
+  // Fat loss banner
+  const fatLow  = Math.round(maxHR * 0.60);
+  const fatHigh = Math.round(maxHR * 0.80);
+  const activityTip = weight > 200
+    ? 'brisk walking, incline treadmill, or elliptical'
+    : 'jogging, cycling, or rowing';
+  document.getElementById('fatBannerBody').innerHTML = `
+    Target <span class="hi">${fatLow}–${fatHigh} bpm</span> for peak fat oxidation.
+    At this intensity, your body preferentially uses fat as fuel over carbs.
+    Recommended: <span class="hi">${activityTip}</span>.
+    Aim for <span class="hi">30–60 min</span> at this pace, 4–5× per week.
+  `;
+
+  // BMI
+  const bmiRounded = bmi.toFixed(1);
+  document.getElementById('bmiVal').textContent = bmiRounded;
+  const bmiPct = Math.min(100, Math.max(0, ((bmi - 16) / 24) * 100));
+  document.getElementById('bmiMarker').style.left = bmiPct + '%';
+  let bmiColor = bmi < 18.5 ? '#60a5fa' : bmi < 25 ? '#34d399' : bmi < 30 ? '#fbbf24' : '#f87171';
+  document.getElementById('bmiVal').style.color = bmiColor;
+
+  // Show results
+  const results = document.getElementById('results');
+  results.classList.add('visible');
+  results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function toggleCard(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+window.addEventListener('load', () => { setTimeout(calculate, 100); });
+</script>
+</body>
+</html>
