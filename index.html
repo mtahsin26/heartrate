@@ -8,24 +8,24 @@
 <style>
 
 :root {
-  /* Bento DS color tokens */
-  --bg:             #FFFFFF;
-  --card:           #FFFFFF;
-  --card-blue-hero: #E8F2FC;
-  --card-blue:      #EEF3F8;
-  --card-green:     #F0FDF4;
-  --border:         #E2E8F0;
-  --border-mid:     #CBD5E1;
-  --text:           #111827;
-  --text-2:         #4B5563;
-  --muted:          #9CA3AF;
-  --primary:        #D1E4F5;
-  --secondary:      #80A1C1;
-  --secondary-dark: #2D5980;
+  /* Bento DS color tokens — dark theme */
+  --bg:             #0F1117;
+  --card:           #171B26;
+  --card-blue-hero: #0D2035;
+  --card-blue:      #0F1E30;
+  --card-green:     #071812;
+  --border:         #252A3A;
+  --border-mid:     #2E3448;
+  --text:           #E8EAF2;
+  --text-2:         #8892A8;
+  --muted:          #4E566C;
+  --primary:        #193356;
+  --secondary:      #5B8DB0;
+  --secondary-dark: #93B8D4;
   --success:        #16A34A;
-  --success-border: #86EFAC;
+  --success-border: #1A5C30;
   --warning:        #D97706;
-  --danger:         #DC2626;
+  --danger:         #EF4444;
 
   /* Zone colors */
   --z1: #60A5FA;
@@ -62,7 +62,7 @@ body {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 /* ─── HEADER ─── */
@@ -101,7 +101,7 @@ h1 {
 h1 em {
   font-style: normal;
   color: transparent;
-  background: linear-gradient(135deg, #2D5980 0%, #80A1C1 60%);
+  background: linear-gradient(135deg, #60A5FA 0%, #93C5FD 60%);
   -webkit-background-clip: text;
   background-clip: text;
 }
@@ -156,7 +156,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 input[type="number"]:focus {
   border-color: var(--secondary);
   box-shadow: 0 0 0 3px rgba(128,161,193,0.22);
-  background: #FFFFFF;
+  background: #1F2533;
 }
 
 .unit {
@@ -226,8 +226,8 @@ input[type="number"]:focus {
   gap: var(--sp-3);
 }
 .calc-btn:hover {
-  background: #1F2937;
-  box-shadow: 0 6px 20px rgba(17,24,39,0.2);
+  background: #CBD3E8;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
   transform: translateY(-1px);
 }
 .calc-btn:active { transform: translateY(0); }
@@ -329,7 +329,7 @@ input[type="number"]:focus {
 /* Max HR card (blue-silver) */
 .maxhr-card {
   background: var(--card-blue-hero);
-  border-color: #B8CCE4;
+  border-color: #1A3A5C;
   padding: var(--sp-6);
   display: flex;
   flex-direction: column;
@@ -533,12 +533,12 @@ input[type="number"]:focus {
 .fat-title {
   font-size: 14px;
   font-weight: 700;
-  color: #14532D;
+  color: #4ADE80;
 }
 
 .fat-body {
   font-size: 14px;
-  color: #166534;
+  color: #86EFAC;
   line-height: 1.65;
   font-weight: 400;
 }
@@ -725,7 +725,7 @@ input[type="number"]:focus {
 .g-card-body-inner {
   border-top: 1px solid var(--border);
   padding: 20px;
-  background: #FAFAFA;
+  background: #0F1117;
 }
 
 .g-row {
@@ -982,7 +982,7 @@ input[type="number"]:focus {
             <div class="g-info">
               <span class="g-zone-num">Zone 1</span>
               <span class="g-zone-name">Warm-Up</span>
-              <span class="g-pct-badge" style="color:#2563EB;border-color:#BFDBFE;background:#EFF6FF">50–60% Max HR</span>
+              <span class="g-pct-badge" style="color:#93C5FD;border-color:#1E3A5F;background:rgba(30,58,95,0.4)">50–60% Max HR</span>
             </div>
             <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
@@ -1013,7 +1013,7 @@ input[type="number"]:focus {
             <div class="g-info">
               <span class="g-zone-num">Zone 2</span>
               <span class="g-zone-name">Fat Burn ★</span>
-              <span class="g-pct-badge" style="color:#059669;border-color:#A7F3D0;background:#ECFDF5">60–70% Max HR</span>
+              <span class="g-pct-badge" style="color:#6EE7B7;border-color:#065F46;background:rgba(6,95,70,0.3)">60–70% Max HR</span>
             </div>
             <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
@@ -1045,7 +1045,7 @@ input[type="number"]:focus {
             <div class="g-info">
               <span class="g-zone-num">Zone 3</span>
               <span class="g-zone-name">Aerobic</span>
-              <span class="g-pct-badge" style="color:#B45309;border-color:#FDE68A;background:#FFFBEB">70–80% Max HR</span>
+              <span class="g-pct-badge" style="color:#FDE68A;border-color:#78350F;background:rgba(120,53,15,0.3)">70–80% Max HR</span>
             </div>
             <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
@@ -1077,7 +1077,7 @@ input[type="number"]:focus {
             <div class="g-info">
               <span class="g-zone-num">Zone 4</span>
               <span class="g-zone-name">Threshold</span>
-              <span class="g-pct-badge" style="color:#C2410C;border-color:#FDBA74;background:#FFF7ED">80–90% Max HR</span>
+              <span class="g-pct-badge" style="color:#FDBA74;border-color:#7C2D12;background:rgba(124,45,18,0.3)">80–90% Max HR</span>
             </div>
             <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
@@ -1109,7 +1109,7 @@ input[type="number"]:focus {
             <div class="g-info">
               <span class="g-zone-num">Zone 5</span>
               <span class="g-zone-name">Max Effort</span>
-              <span class="g-pct-badge" style="color:#DC2626;border-color:#FECACA;background:#FEF2F2">90–100% Max HR</span>
+              <span class="g-pct-badge" style="color:#FCA5A5;border-color:#7F1D1D;background:rgba(127,29,29,0.3)">90–100% Max HR</span>
             </div>
             <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
