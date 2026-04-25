@@ -11,15 +11,15 @@
   /* Bento DS color tokens */
   --bg:             #F8F8F8;
   --card:           #FFFFFF;
-  --card-peach:     #efe7e3;
+  --card-blue-hero: #E8F2FC;
   --card-blue:      #EEF3F8;
   --card-green:     #F0FDF4;
-  --border:         #EDE0D4;
-  --border-mid:     #DDD0C4;
+  --border:         #E2E8F0;
+  --border-mid:     #CBD5E1;
   --text:           #111827;
   --text-2:         #4B5563;
   --muted:          #9CA3AF;
-  --primary:        #FAD4C0;
+  --primary:        #D1E4F5;
   --secondary:      #80A1C1;
   --secondary-dark: #2D5980;
   --success:        #16A34A;
@@ -62,7 +62,7 @@ body {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(28,15,5,0.06), 0 1px 2px rgba(28,15,5,0.04);
+  box-shadow: 0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
 }
 
 /* ─── HEADER ─── */
@@ -101,7 +101,7 @@ h1 {
 h1 em {
   font-style: normal;
   color: transparent;
-  background: linear-gradient(135deg, #E8734A 0%, #FAD4C0 60%);
+  background: linear-gradient(135deg, #2D5980 0%, #80A1C1 60%);
   -webkit-background-clip: text;
   background-clip: text;
 }
@@ -195,13 +195,19 @@ input[type="number"]:focus {
 .gender-btn:hover { border-color: var(--secondary); color: var(--secondary-dark); }
 .gender-btn.active {
   background: var(--primary);
-  border-color: #E8A88A;
-  color: var(--text);
-  box-shadow: 0 1px 3px rgba(232,115,74,0.2);
+  border-color: var(--secondary);
+  color: var(--secondary-dark);
+  box-shadow: 0 1px 3px rgba(128,161,193,0.25);
+}
+
+.btn-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--sp-2);
 }
 
 .calc-btn {
-  grid-column: 1 / -1;
   height: 52px;
   background: var(--text);
   border: none;
@@ -228,6 +234,25 @@ input[type="number"]:focus {
 
 .calc-arrow { transition: transform 0.2s; font-size: 1rem; }
 .calc-btn:hover .calc-arrow { transform: translateX(4px); }
+
+.clear-btn {
+  height: 52px;
+  background: none;
+  border: 1.5px solid var(--border-mid);
+  border-radius: 10px;
+  color: var(--text-2);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0 20px;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+}
+.clear-btn:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
 
 /* ─── RESULTS ─── */
 .results {
@@ -301,10 +326,10 @@ input[type="number"]:focus {
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* Max HR card (peach) */
+/* Max HR card (blue-silver) */
 .maxhr-card {
-  background: var(--card-peach);
-  border-color: #E8A88A;
+  background: var(--card-blue-hero);
+  border-color: #B8CCE4;
   padding: var(--sp-6);
   display: flex;
   flex-direction: column;
@@ -318,7 +343,7 @@ input[type="number"]:focus {
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #7C4A32;
+  color: var(--secondary-dark);
   opacity: 0.75;
 }
 
@@ -334,7 +359,7 @@ input[type="number"]:focus {
 .maxhr-unit {
   font-size: 14px;
   font-weight: 600;
-  color: #7C4A32;
+  color: var(--secondary-dark);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   margin-top: 2px;
@@ -344,7 +369,7 @@ input[type="number"]:focus {
   margin-top: var(--sp-2);
   font-size: 12px;
   font-weight: 500;
-  color: #7C4A32;
+  color: var(--secondary-dark);
   opacity: 0.75;
   line-height: 1.5;
 }
@@ -852,10 +877,13 @@ input[type="number"]:focus {
       </div>
     </div>
 
-    <button class="calc-btn" onclick="calculate()">
-      Calculate My Zones
-      <span class="calc-arrow">→</span>
-    </button>
+    <div class="btn-row">
+      <button class="calc-btn" onclick="calculate()">
+        Calculate My Zones
+        <span class="calc-arrow">→</span>
+      </button>
+      <button class="clear-btn" onclick="clearAll()">Clear</button>
+    </div>
 
   </div>
 
@@ -1216,17 +1244,50 @@ function calculate() {
   const bmiColor = bmi < 18.5 ? '#2563EB' : bmi < 25 ? '#16A34A' : bmi < 30 ? '#D97706' : '#DC2626';
   document.getElementById('bmiVal').style.color = bmiColor;
 
-  // Show results
-  const results = document.getElementById('results');
-  results.classList.add('visible');
-  results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  // Save to localStorage
+  localStorage.setItem('hrzone_age',    age);
+  localStorage.setItem('hrzone_weight', weight);
+  localStorage.setItem('hrzone_feet',   feet);
+  localStorage.setItem('hrzone_inches', inches);
+  localStorage.setItem('hrzone_gender', gender);
+
+  // Show results (no scroll)
+  document.getElementById('results').classList.add('visible');
+}
+
+function clearAll() {
+  ['hrzone_age','hrzone_weight','hrzone_feet','hrzone_inches','hrzone_gender']
+    .forEach(k => localStorage.removeItem(k));
+
+  document.getElementById('age').value    = '';
+  document.getElementById('weight').value = '';
+  document.getElementById('feet').value   = '';
+  document.getElementById('inches').value = '';
+  setGender('male');
+
+  document.getElementById('results').classList.remove('visible');
 }
 
 function toggleCard(id) {
   document.getElementById(id).classList.toggle('open');
 }
 
-window.addEventListener('load', () => { setTimeout(calculate, 100); });
+window.addEventListener('load', () => {
+  const age    = localStorage.getItem('hrzone_age');
+  const weight = localStorage.getItem('hrzone_weight');
+  const feet   = localStorage.getItem('hrzone_feet');
+  const inches = localStorage.getItem('hrzone_inches');
+  const g      = localStorage.getItem('hrzone_gender');
+
+  if (age && weight && feet && inches) {
+    document.getElementById('age').value    = age;
+    document.getElementById('weight').value = weight;
+    document.getElementById('feet').value   = feet;
+    document.getElementById('inches').value = inches;
+    if (g) setGender(g);
+    calculate();
+  }
+});
 </script>
 </body>
 </html>
