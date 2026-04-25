@@ -158,6 +158,10 @@ input[type="number"]:focus {
   box-shadow: 0 0 0 3px rgba(128,161,193,0.22);
   background: #1F2533;
 }
+input[type="number"].input-error {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.2);
+}
 
 .unit {
   position: absolute;
@@ -1163,10 +1167,20 @@ const ZONES = [
 ];
 
 function calculate() {
-  const age    = parseInt(document.getElementById('age').value)    || 30;
-  const weight = parseInt(document.getElementById('weight').value) || 150;
-  const feet   = parseInt(document.getElementById('feet').value)   || 5;
-  const inches = parseInt(document.getElementById('inches').value) || 7;
+  const fields = ['age', 'weight', 'feet', 'inches'];
+  let valid = true;
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    const empty = el.value === '' || isNaN(parseInt(el.value));
+    el.classList.toggle('input-error', empty);
+    if (empty) valid = false;
+  });
+  if (!valid) return;
+
+  const age    = parseInt(document.getElementById('age').value);
+  const weight = parseInt(document.getElementById('weight').value);
+  const feet   = parseInt(document.getElementById('feet').value);
+  const inches = parseInt(document.getElementById('inches').value);
 
   const maxHR = gender === 'female'
     ? Math.round(206 - 0.88 * age)
@@ -1244,12 +1258,13 @@ function calculate() {
   const bmiColor = bmi < 18.5 ? '#2563EB' : bmi < 25 ? '#16A34A' : bmi < 30 ? '#D97706' : '#DC2626';
   document.getElementById('bmiVal').style.color = bmiColor;
 
-  // Save to localStorage
-  localStorage.setItem('hrzone_age',    age);
-  localStorage.setItem('hrzone_weight', weight);
-  localStorage.setItem('hrzone_feet',   feet);
-  localStorage.setItem('hrzone_inches', inches);
-  localStorage.setItem('hrzone_gender', gender);
+  // Save to localStorage (only reaches here after successful calculate)
+  localStorage.setItem('hrzone_age',     age);
+  localStorage.setItem('hrzone_weight',  weight);
+  localStorage.setItem('hrzone_feet',    feet);
+  localStorage.setItem('hrzone_inches',  inches);
+  localStorage.setItem('hrzone_gender',  gender);
+  localStorage.removeItem('hrzone_cleared');
 
   // Show results and scroll to zones
   const results = document.getElementById('results');
@@ -1263,13 +1278,15 @@ function calculate() {
 }
 
 function clearAll() {
+  localStorage.setItem('hrzone_cleared', 'true');
   ['hrzone_age','hrzone_weight','hrzone_feet','hrzone_inches','hrzone_gender']
     .forEach(k => localStorage.removeItem(k));
 
-  document.getElementById('age').value    = '';
-  document.getElementById('weight').value = '';
-  document.getElementById('feet').value   = '';
-  document.getElementById('inches').value = '';
+  ['age','weight','feet','inches'].forEach(id => {
+    const el = document.getElementById(id);
+    el.value = '';
+    el.classList.remove('input-error');
+  });
   setGender('male');
 
   document.getElementById('results').classList.remove('visible');
@@ -1280,6 +1297,8 @@ function toggleCard(id) {
 }
 
 window.addEventListener('load', () => {
+  if (localStorage.getItem('hrzone_cleared') === 'true') return;
+
   const age    = localStorage.getItem('hrzone_age');
   const weight = localStorage.getItem('hrzone_weight');
   const feet   = localStorage.getItem('hrzone_feet');
