@@ -9,7 +9,7 @@
 
 :root {
   /* Bento DS color tokens */
-  --bg:             #F8F8F8;
+  --bg:             #FFFFFF;
   --card:           #FFFFFF;
   --card-blue-hero: #E8F2FC;
   --card-blue:      #EEF3F8;
@@ -1251,8 +1251,15 @@ function calculate() {
   localStorage.setItem('hrzone_inches', inches);
   localStorage.setItem('hrzone_gender', gender);
 
-  // Show results (no scroll)
-  document.getElementById('results').classList.add('visible');
+  // Show results and scroll to zones
+  const results = document.getElementById('results');
+  const wasVisible = results.classList.contains('visible');
+  results.classList.add('visible');
+  if (!wasVisible) {
+    setTimeout(() => {
+      document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  }
 }
 
 function clearAll() {
