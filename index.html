@@ -4,28 +4,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HR Zone Calculator</title>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
 
 :root {
-  --bg: #0D0D0D;
-  --surface: #111111;
-  --card: #181818;
-  --border: #272727;
-  --border-bright: #3A3A3A;
-  --text: #F0F0F0;
-  --text-2: #A8A8A8;
-  --muted: #5E5E5E;
-  --primary: #0077BC;
-  --primary-hover: #0088D4;
-  --primary-dim: rgba(0,119,188,0.12);
-  --secondary: #009866;
-  --secondary-dim: rgba(0,152,102,0.10);
+  /* Bento DS color tokens */
+  --bg:             #FFF5E6;
+  --card:           #FFFFFF;
+  --card-peach:     #FAD4C0;
+  --card-blue:      #EEF3F8;
+  --card-green:     #F0FDF4;
+  --border:         #EDE0D4;
+  --border-mid:     #DDD0C4;
+  --text:           #111827;
+  --text-2:         #4B5563;
+  --muted:          #9CA3AF;
+  --primary:        #FAD4C0;
+  --secondary:      #80A1C1;
+  --secondary-dark: #2D5980;
+  --success:        #16A34A;
+  --success-border: #86EFAC;
+  --warning:        #D97706;
+  --danger:         #DC2626;
+
+  /* Zone colors */
   --z1: #60A5FA;
   --z2: #34D399;
   --z3: #FBBF24;
   --z4: #FB923C;
   --z5: #F87171;
+
+  /* Spacing scale: 4/8/12/16/24/32 */
+  --sp-1: 4px;   --sp-2: 8px;   --sp-3: 12px;
+  --sp-4: 16px;  --sp-6: 24px;  --sp-8: 32px;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,9 +44,9 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Archivo', sans-serif;
+  font-family: 'Inter', sans-serif;
   min-height: 100vh;
-  padding: 52px 20px 80px;
+  padding: 48px 20px 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -43,78 +54,82 @@ body {
 
 .container {
   width: 100%;
-  max-width: 720px;
+  max-width: 740px;
 }
 
-/* ── HEADER ── */
-.header { margin-bottom: 44px; }
+/* ─── CARD BASE ─── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(28,15,5,0.06), 0 1px 2px rgba(28,15,5,0.04);
+}
+
+/* ─── HEADER ─── */
+.header {
+  margin-bottom: var(--sp-8);
+}
 
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.72rem;
+  gap: var(--sp-2);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--primary);
-  margin-bottom: 16px;
+  color: var(--secondary-dark);
+  margin-bottom: var(--sp-3);
 }
 
-.eyebrow-pulse {
-  width: 7px;
-  height: 7px;
+.eyebrow-dot {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: var(--primary);
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(0,119,188,0.5); }
-  50% { box-shadow: 0 0 0 7px rgba(0,119,188,0); }
+  background: var(--secondary);
 }
 
 h1 {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: clamp(2.8rem, 8vw, 5.2rem);
-  letter-spacing: -0.025em;
-  line-height: 0.95;
+  font-size: clamp(2.4rem, 8vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.0;
   color: var(--text);
-  margin-bottom: 18px;
+  margin-bottom: var(--sp-4);
 }
 
 h1 em {
-  color: var(--primary);
   font-style: normal;
+  color: transparent;
+  background: linear-gradient(135deg, #E8734A 0%, #FAD4C0 60%);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 .tagline {
-  font-size: 1rem;
+  font-size: 16px;
   color: var(--text-2);
   line-height: 1.65;
   max-width: 460px;
   font-weight: 400;
 }
 
-/* ── INPUT PANEL ── */
-.input-panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 32px;
-  margin-bottom: 32px;
+/* ─── INPUT CARD ─── */
+.input-card {
+  padding: var(--sp-6);
+  margin-bottom: var(--sp-4);
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  gap: var(--sp-4);
 }
 
-.field { display: flex; flex-direction: column; gap: 8px; }
+.field { display: flex; flex-direction: column; gap: var(--sp-2); }
 .field.full { grid-column: 1 / -1; }
 
 label {
-  font-size: 0.7rem;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -123,34 +138,33 @@ label {
 
 input[type="number"] {
   width: 100%;
-  height: 52px;
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 0 52px 0 16px;
+  height: 48px;
+  background: var(--bg);
+  border: 1.5px solid var(--border-mid);
+  border-radius: 10px;
+  padding: 0 48px 0 14px;
   color: var(--text);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
   -moz-appearance: textfield;
 }
-
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
-
 input[type="number"]:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(0,119,188,0.18);
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgba(128,161,193,0.22);
+  background: #FFFFFF;
 }
 
 .unit {
   position: absolute;
-  right: 16px;
+  right: 14px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 0.7rem;
+  font-size: 11px;
   font-weight: 700;
   color: var(--muted);
   pointer-events: none;
@@ -158,349 +172,376 @@ input[type="number"]:focus {
   text-transform: uppercase;
 }
 
-.height-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
+.height-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
 
-.gender-toggle {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
+.gender-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
 
 .gender-btn {
-  height: 52px;
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  color: var(--muted);
-  font-family: 'Archivo', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  height: 48px;
+  background: var(--bg);
+  border: 1.5px solid var(--border-mid);
+  border-radius: 10px;
+  color: var(--text-2);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  transition: all 0.15s;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 7px;
 }
-
-.gender-btn:hover {
-  border-color: var(--border-bright);
-  color: var(--text-2);
-}
-
+.gender-btn:hover { border-color: var(--secondary); color: var(--secondary-dark); }
 .gender-btn.active {
-  background: var(--primary-dim);
-  border-color: var(--primary);
-  color: var(--primary);
+  background: var(--primary);
+  border-color: #E8A88A;
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(232,115,74,0.2);
 }
 
 .calc-btn {
   grid-column: 1 / -1;
-  height: 56px;
-  background: var(--primary);
+  height: 52px;
+  background: var(--text);
   border: none;
-  border-radius: 8px;
-  color: #fff;
-  font-family: 'Archivo Black', sans-serif;
-  font-size: 0.9rem;
-  letter-spacing: 0.12em;
+  border-radius: 10px;
+  color: var(--bg);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
   transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: var(--sp-3);
 }
-
 .calc-btn:hover {
-  background: var(--primary-hover);
-  box-shadow: 0 8px 28px rgba(0,119,188,0.35);
+  background: #1F2937;
+  box-shadow: 0 6px 20px rgba(17,24,39,0.2);
   transform: translateY(-1px);
 }
+.calc-btn:active { transform: translateY(0); }
 
-.calc-btn:active { transform: translateY(0); box-shadow: none; }
-
-.calc-arrow { transition: transform 0.2s; }
+.calc-arrow { transition: transform 0.2s; font-size: 1rem; }
 .calc-btn:hover .calc-arrow { transform: translateX(4px); }
 
-/* ── RESULTS ── */
+/* ─── RESULTS ─── */
 .results {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transform: translateY(12px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
   pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
 }
-
 .results.visible {
   opacity: 1;
   transform: translateY(0);
   pointer-events: all;
 }
 
-/* Stats strip */
-.stats-strip {
+/* ─── BENTO ROW 1: STATS + MAX HR ─── */
+.bento-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-4);
+  align-items: stretch;
+}
+
+/* Stats card */
+.stats-card {
+  padding: var(--sp-6);
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 28px;
+  flex-direction: column;
+  gap: var(--sp-3);
 }
 
-.stat-chip {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 8px 14px;
-  font-size: 0.78rem;
-  font-weight: 500;
-  color: var(--muted);
-  white-space: nowrap;
-}
-
-.stat-chip strong {
-  color: var(--text);
+.card-label {
+  font-size: 11px;
   font-weight: 700;
-  margin-left: 4px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.mini-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+  flex: 1;
+}
+
+.mini-stat {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: var(--sp-3) var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mini-stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.mini-stat-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
   font-family: 'JetBrains Mono', monospace;
 }
 
-.stat-chip.highlight {
-  background: var(--primary-dim);
-  border-color: rgba(0,119,188,0.35);
-}
-
-.stat-chip.highlight strong { color: var(--primary); }
-
-/* Section row */
-.section-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.section-label {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--muted);
-  white-space: nowrap;
-}
-
-.section-line {
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
-
-.glossary-btn {
-  background: transparent;
-  border: 1px solid var(--border-bright);
-  border-radius: 6px;
-  padding: 7px 14px;
-  min-height: 36px;
-  color: var(--muted);
-  font-family: 'Archivo', sans-serif;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-}
-
-.glossary-btn:hover { border-color: var(--primary); color: var(--primary); }
-
-.glossary-btn svg {
-  width: 12px;
-  height: 12px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* ── ZONE CARDS ── */
-.zones-list {
+/* Max HR card (peach) */
+.maxhr-card {
+  background: var(--card-peach);
+  border-color: #E8A88A;
+  padding: var(--sp-6);
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 28px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 4px;
 }
 
-.zone-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  transition: border-color 0.15s;
+.maxhr-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7C4A32;
+  opacity: 0.75;
 }
 
-.zone-card:hover { border-color: var(--border-bright); }
+.maxhr-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(2.8rem, 6vw, 4rem);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
 
-.zone-top-row {
+.maxhr-unit {
+  font-size: 14px;
+  font-weight: 600;
+  color: #7C4A32;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.maxhr-formula {
+  margin-top: var(--sp-2);
+  font-size: 12px;
+  font-weight: 500;
+  color: #7C4A32;
+  opacity: 0.75;
+  line-height: 1.5;
+}
+
+/* ─── BENTO ZONES CARD ─── */
+.zones-card {
+  padding: var(--sp-6);
+}
+
+.zones-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  margin-bottom: var(--sp-4);
 }
 
-.zone-meta { display: flex; flex-direction: column; gap: 3px; }
+.card-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--secondary-dark);
+  letter-spacing: 0.02em;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.15s;
+}
+.link-btn:hover { color: var(--secondary); }
+.link-btn svg {
+  width: 13px; height: 13px;
+  stroke: currentColor; fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.zones-list { display: flex; flex-direction: column; gap: var(--sp-2); }
+
+.zone-row {
+  display: grid;
+  grid-template-columns: 88px 1fr auto;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.zone-label-col { display: flex; flex-direction: column; gap: 2px; }
 
 .zone-num {
-  font-size: 0.63rem;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted);
 }
 
 .zone-name {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: 1rem;
-  color: var(--text);
-  line-height: 1;
-}
-
-.zone-bpm { text-align: right; flex-shrink: 0; }
-
-.bpm-range {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.35rem;
-  font-weight: 600;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.bpm-unit-label {
-  font-size: 0.63rem;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-top: 3px;
-  text-align: right;
+  color: var(--text);
 }
 
-.bar-track {
-  background: #111;
-  border-radius: 6px;
-  height: 32px;
+.bar-wrap {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  height: 38px;
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--border);
 }
 
 .bar-fill {
   height: 100%;
-  border-radius: 5px;
+  border-radius: 7px;
   position: absolute;
   left: 0;
   top: 0;
   width: 0%;
   transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0.85;
 }
 
-.bar-text {
+.bar-inner-text {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   padding: 0 12px;
-  font-size: 0.72rem;
+  font-size: 12px;
   font-weight: 600;
-  color: rgba(255,255,255,0.75);
+  color: rgba(0,0,0,0.6);
   pointer-events: none;
   white-space: nowrap;
   overflow: hidden;
 }
 
-/* ── FAT BURN BANNER ── */
-.fat-banner {
-  background: var(--secondary-dim);
-  border: 1px solid rgba(0,152,102,0.22);
-  border-left: 4px solid var(--secondary);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 28px;
-  display: grid;
-  grid-template-columns: 48px 1fr;
-  gap: 16px;
-  align-items: start;
+.bpm-col { text-align: right; }
+
+.bpm-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
 }
 
-.banner-icon {
-  width: 48px;
-  height: 48px;
-  background: rgba(0,152,102,0.15);
+.bpm-suffix {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ─── BENTO ROW 3: FAT + BMI ─── */
+.bento-bottom {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: var(--sp-4);
+  align-items: stretch;
+}
+
+/* Fat burn card */
+.fat-card {
+  background: var(--card-green);
+  border-color: var(--success-border);
+  border-left: 4px solid var(--success);
+  padding: var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.fat-icon-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.fat-icon {
+  width: 36px;
+  height: 36px;
+  background: rgba(22,163,74,0.12);
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   flex-shrink: 0;
 }
 
-.banner-title {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: 1.1rem;
-  color: var(--secondary);
-  margin-bottom: 8px;
-  letter-spacing: -0.01em;
+.fat-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #14532D;
 }
 
-.banner-body {
-  font-size: 0.875rem;
-  color: rgba(0,152,102,0.75);
+.fat-body {
+  font-size: 14px;
+  color: #166534;
   line-height: 1.65;
+  font-weight: 400;
 }
 
-.banner-body .hi {
-  color: var(--secondary);
+.fat-body .hi {
+  color: var(--success);
   font-weight: 700;
 }
 
-/* ── BMI ── */
+/* BMI card */
 .bmi-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
+  padding: var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
 }
 
-.bmi-top {
+.bmi-top-row {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 16px;
 }
 
-.bmi-card-label {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.bmi-value {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: 2rem;
-  letter-spacing: -0.03em;
+.bmi-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   line-height: 1;
 }
 
@@ -509,7 +550,6 @@ input[type="number"]:focus {
   height: 8px;
   border-radius: 8px;
   background: linear-gradient(90deg, #60A5FA 0%, #34D399 25%, #FBBF24 50%, #FB923C 75%, #F87171 100%);
-  margin-bottom: 10px;
 }
 
 .bmi-marker {
@@ -520,82 +560,85 @@ input[type="number"]:focus {
   background: white;
   border-radius: 50%;
   transform: translateX(-50%);
-  box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 0 12px rgba(255,255,255,0.3);
-  transition: left 0.6s cubic-bezier(0.16,1,0.3,1);
+  box-shadow: 0 0 0 2.5px rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.18);
+  transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .bmi-ticks {
   display: flex;
   justify-content: space-between;
-  font-size: 0.67rem;
+  font-size: 10px;
   font-weight: 600;
   color: var(--muted);
   letter-spacing: 0.02em;
+  margin-top: -8px;
 }
 
-/* ── GLOSSARY ── */
+/* ─── GLOSSARY ─── */
 .glossary-section {
-  margin-top: 52px;
+  margin-top: var(--sp-2);
   border-top: 1px solid var(--border);
-  padding-top: 44px;
+  padding-top: var(--sp-8);
 }
 
-.glossary-header { margin-bottom: 12px; }
+.glossary-heading-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-2);
+}
 
-.glossary-header h2 {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: clamp(1.7rem, 4vw, 2.2rem);
+.glossary-heading-row h2 {
+  font-size: 24px;
+  font-weight: 800;
   letter-spacing: -0.02em;
-  line-height: 1;
   color: var(--text);
-  display: inline;
 }
 
 .g-badge {
-  display: inline-block;
-  font-size: 0.65rem;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--primary);
-  border: 1px solid rgba(0,119,188,0.35);
-  border-radius: 4px;
-  padding: 3px 9px;
-  margin-left: 12px;
-  vertical-align: middle;
-  position: relative;
-  top: -2px;
+  color: var(--secondary-dark);
+  background: var(--card-blue);
+  border: 1px solid rgba(128,161,193,0.35);
+  border-radius: 6px;
+  padding: 3px 10px;
 }
 
 .glossary-intro {
-  font-size: 0.875rem;
+  font-size: 14px;
   color: var(--text-2);
   line-height: 1.65;
   max-width: 520px;
-  margin-top: 12px;
-  margin-bottom: 28px;
+  margin-bottom: var(--sp-6);
 }
 
-.glossary-cards { display: flex; flex-direction: column; gap: 10px; }
+.glossary-cards { display: flex; flex-direction: column; gap: var(--sp-3); }
 
 .g-card {
-  background: var(--surface);
+  background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
-  transition: border-color 0.2s;
+  box-shadow: 0 1px 2px rgba(28,15,5,0.04);
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.g-card:hover { border-color: var(--border-bright); }
+.g-card:hover {
+  border-color: var(--border-mid);
+  box-shadow: 0 2px 8px rgba(28,15,5,0.08);
+}
 
 .g-card-header {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 18px 20px;
+  gap: var(--sp-3);
+  padding: 16px 20px;
   cursor: pointer;
   user-select: none;
-  min-height: 64px;
+  min-height: 60px;
 }
 
 .g-dot {
@@ -603,7 +646,6 @@ input[type="number"]:focus {
   height: 10px;
   border-radius: 50%;
   flex-shrink: 0;
-  box-shadow: 0 0 8px currentColor;
 }
 
 .g-info {
@@ -615,7 +657,7 @@ input[type="number"]:focus {
 }
 
 .g-zone-num {
-  font-size: 0.63rem;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -624,8 +666,8 @@ input[type="number"]:focus {
 }
 
 .g-zone-name {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: 1rem;
+  font-size: 15px;
+  font-weight: 700;
   color: var(--text);
   line-height: 1.1;
 }
@@ -634,9 +676,8 @@ input[type="number"]:focus {
   display: inline-block;
   align-self: flex-start;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.03em;
   padding: 3px 10px;
   border-radius: 20px;
   border: 1px solid;
@@ -644,43 +685,35 @@ input[type="number"]:focus {
 }
 
 .g-chevron {
-  width: 18px;
-  height: 18px;
-  stroke: var(--muted);
-  fill: none;
+  width: 18px; height: 18px;
+  stroke: var(--muted); fill: none;
   stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  stroke-linecap: round; stroke-linejoin: round;
   transition: transform 0.25s ease;
   flex-shrink: 0;
 }
-
 .g-card.open .g-chevron { transform: rotate(180deg); }
 
-.g-card-body {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1);
-}
-
+.g-card-body { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1); }
 .g-card.open .g-card-body { max-height: 600px; }
 
 .g-card-body-inner {
   border-top: 1px solid var(--border);
   padding: 20px;
+  background: #FAFAFA;
 }
 
 .g-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px 16px;
-  margin-bottom: 16px;
+  gap: var(--sp-3) var(--sp-4);
+  margin-bottom: var(--sp-4);
 }
 
 .g-meta-item { display: flex; flex-direction: column; gap: 4px; }
 
 .g-meta-key {
-  font-size: 0.63rem;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -688,73 +721,80 @@ input[type="number"]:focus {
 }
 
 .g-meta-val {
-  font-size: 0.85rem;
+  font-size: 13px;
   color: var(--text-2);
   font-weight: 500;
   line-height: 1.4;
 }
 
 .g-desc {
-  font-size: 0.85rem;
-  color: var(--muted);
-  line-height: 1.65;
-  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.7;
+  margin-bottom: var(--sp-4);
 }
 
 .g-activities { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .g-activity-tag {
-  background: var(--card);
-  border: 1px solid var(--border);
+  background: var(--bg);
+  border: 1px solid var(--border-mid);
   border-radius: 20px;
-  padding: 5px 13px;
-  font-size: 0.72rem;
+  padding: 4px 12px;
+  font-size: 12px;
   color: var(--text-2);
   font-weight: 500;
 }
 
 /* Disclaimer */
 .disclaimer {
-  font-size: 0.71rem;
+  font-size: 12px;
   color: var(--muted);
   text-align: center;
-  margin-top: 36px;
+  margin-top: var(--sp-8);
   line-height: 1.7;
-  opacity: 0.6;
 }
 
-/* ── RESPONSIVE ── */
-@media (max-width: 600px) {
+/* ─── RESPONSIVE ─── */
+@media (max-width: 640px) {
   body { padding: 28px 16px 60px; }
 
-  .input-panel {
+  .input-card {
     grid-template-columns: 1fr;
     padding: 20px;
-    gap: 18px;
+    gap: var(--sp-4);
   }
-
   .field.full { grid-column: 1; }
   .calc-btn { grid-column: 1; }
 
-  .fat-banner {
-    grid-template-columns: 44px 1fr;
-    gap: 12px;
-    padding: 18px;
+  .bento-top {
+    grid-template-columns: 1fr;
   }
 
-  .banner-icon { width: 44px; height: 44px; font-size: 1.2rem; }
+  .maxhr-card { align-items: center; text-align: center; }
+
+  .bento-bottom {
+    grid-template-columns: 1fr;
+  }
+
+  .zone-row {
+    grid-template-columns: 72px 1fr auto;
+    gap: var(--sp-2);
+  }
+
+  .bpm-val { font-size: 16px; }
 
   .g-row { grid-template-columns: 1fr; }
 
-  .bmi-ticks { font-size: 0.6rem; }
+  .bmi-ticks { font-size: 9px; }
 
-  .section-row { flex-wrap: wrap; gap: 8px; }
+  h1 { font-size: 2.4rem; }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 400px) {
   .height-row { grid-template-columns: 1fr; }
   .gender-toggle { grid-template-columns: 1fr; }
-  .bpm-range { font-size: 1.1rem; }
+  .mini-stats-grid { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
@@ -764,15 +804,15 @@ input[type="number"]:focus {
   <!-- HEADER -->
   <div class="header">
     <div class="eyebrow">
-      <span class="eyebrow-pulse"></span>
+      <span class="eyebrow-dot"></span>
       Fitness Tool
     </div>
     <h1>Heart Rate<br><em>Zone</em> Calc</h1>
     <p class="tagline">Enter your stats and instantly see your personalized training zones — including the exact fat-burning range for your body.</p>
   </div>
 
-  <!-- INPUT PANEL -->
-  <div class="input-panel">
+  <!-- INPUT CARD -->
+  <div class="card input-card">
 
     <div class="field">
       <label for="age">Age</label>
@@ -822,46 +862,84 @@ input[type="number"]:focus {
   <!-- RESULTS -->
   <div class="results" id="results">
 
-    <div class="stats-strip" id="statsStrip"></div>
+    <!-- Row 1: Stats + Max HR -->
+    <div class="bento-top">
 
-    <div class="section-row">
-      <span class="section-label">Training Zones</span>
-      <div class="section-line"></div>
-      <button class="glossary-btn" onclick="document.getElementById('glossary').scrollIntoView({behavior:'smooth'})">
-        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-        Zone Glossary
-      </button>
+      <div class="card stats-card">
+        <div class="card-label">Your Profile</div>
+        <div class="mini-stats-grid">
+          <div class="mini-stat">
+            <span class="mini-stat-label">Age</span>
+            <span class="mini-stat-value" id="statAge">—</span>
+          </div>
+          <div class="mini-stat">
+            <span class="mini-stat-label">Weight</span>
+            <span class="mini-stat-value" id="statWeight">—</span>
+          </div>
+          <div class="mini-stat">
+            <span class="mini-stat-label">Height</span>
+            <span class="mini-stat-value" id="statHeight">—</span>
+          </div>
+          <div class="mini-stat">
+            <span class="mini-stat-label">Sex</span>
+            <span class="mini-stat-value" id="statSex">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card maxhr-card">
+        <div class="maxhr-eyebrow">Max Heart Rate</div>
+        <div class="maxhr-number" id="maxHRValue">—</div>
+        <div class="maxhr-unit">bpm</div>
+        <div class="maxhr-formula" id="maxHRFormula">220 − age</div>
+      </div>
+
     </div>
 
-    <div class="zones-list" id="zonesList"></div>
-
-    <div class="fat-banner">
-      <div class="banner-icon">🔥</div>
-      <div>
-        <div class="banner-title">Your Fat Loss Zone</div>
-        <div class="banner-body" id="fatBannerBody"></div>
+    <!-- Row 2: Training Zones (full width) -->
+    <div class="card zones-card">
+      <div class="zones-card-header">
+        <span class="card-title">Training Zones</span>
+        <button class="link-btn" onclick="document.getElementById('glossary').scrollIntoView({behavior:'smooth'})">
+          <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          Zone Glossary
+        </button>
       </div>
+      <div class="zones-list" id="zonesList"></div>
     </div>
 
-    <div class="bmi-card">
-      <div class="bmi-top">
-        <span class="bmi-card-label">BMI</span>
-        <span class="bmi-value" id="bmiVal">—</span>
+    <!-- Row 3: Fat Burn + BMI -->
+    <div class="bento-bottom">
+
+      <div class="card fat-card">
+        <div class="fat-icon-row">
+          <div class="fat-icon">🔥</div>
+          <div class="fat-title">Your Fat Loss Zone</div>
+        </div>
+        <div class="fat-body" id="fatBannerBody"></div>
       </div>
-      <div class="bmi-scale">
-        <div class="bmi-marker" id="bmiMarker" style="left:0%"></div>
+
+      <div class="card bmi-card">
+        <div class="bmi-top-row">
+          <span class="card-label">BMI</span>
+          <span class="bmi-num" id="bmiVal">—</span>
+        </div>
+        <div class="bmi-scale">
+          <div class="bmi-marker" id="bmiMarker" style="left:0%"></div>
+        </div>
+        <div class="bmi-ticks">
+          <span>Under</span>
+          <span>Normal</span>
+          <span>Over</span>
+          <span>Obese</span>
+        </div>
       </div>
-      <div class="bmi-ticks">
-        <span>Underweight</span>
-        <span>Normal</span>
-        <span>Overweight</span>
-        <span>Obese</span>
-      </div>
+
     </div>
 
     <!-- GLOSSARY -->
     <div class="glossary-section" id="glossary">
-      <div class="glossary-header">
+      <div class="glossary-heading-row">
         <h2>Zone Glossary</h2>
         <span class="g-badge">Reference</span>
       </div>
@@ -872,11 +950,11 @@ input[type="number"]:focus {
         <!-- Zone 1 -->
         <div class="g-card" id="gc1">
           <div class="g-card-header" onclick="toggleCard('gc1')">
-            <div class="g-dot" style="color:#60A5FA;background:#60A5FA"></div>
+            <div class="g-dot" style="background:#60A5FA"></div>
             <div class="g-info">
               <span class="g-zone-num">Zone 1</span>
               <span class="g-zone-name">Warm-Up</span>
-              <span class="g-pct-badge" style="color:#60A5FA;border-color:#60A5FA44;background:rgba(96,165,250,0.08)">50–60% Max HR</span>
+              <span class="g-pct-badge" style="color:#2563EB;border-color:#BFDBFE;background:#EFF6FF">50–60% Max HR</span>
             </div>
             <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
@@ -885,7 +963,7 @@ input[type="number"]:focus {
               <div class="g-row">
                 <div class="g-meta-item"><span class="g-meta-key">Energy Source</span><span class="g-meta-val">Primarily fat (~85%)</span></div>
                 <div class="g-meta-item"><span class="g-meta-key">Feel</span><span class="g-meta-val">Very easy, effortless breathing</span></div>
-                <div class="g-meta-item"><span class="g-meta-key">Best For</span><span class="g-meta-val">Warm-up, cool-down, active recovery</span></div>
+                <div class="g-meta-item"><span class="g-meta-key">Best For</span><span class="g-meta-val">Warm-up, cool-down, recovery</span></div>
                 <div class="g-meta-item"><span class="g-meta-key">Duration</span><span class="g-meta-val">5–20 min (prep/recovery)</span></div>
               </div>
               <p class="g-desc">Zone 1 is the gentlest end of aerobic training. Your cardiovascular system is active but under little stress. Blood flow increases to warm muscles, oxygen delivery ramps up, and your body begins mobilizing fat stores. This zone is essential before and after harder efforts — skipping it increases injury risk and slows recovery.</p>
@@ -903,11 +981,11 @@ input[type="number"]:focus {
         <!-- Zone 2 -->
         <div class="g-card" id="gc2">
           <div class="g-card-header" onclick="toggleCard('gc2')">
-            <div class="g-dot" style="color:#34D399;background:#34D399"></div>
+            <div class="g-dot" style="background:#34D399"></div>
             <div class="g-info">
               <span class="g-zone-num">Zone 2</span>
               <span class="g-zone-name">Fat Burn ★</span>
-              <span class="g-pct-badge" style="color:#34D399;border-color:#34D39944;background:rgba(52,211,153,0.08)">60–70% Max HR</span>
+              <span class="g-pct-badge" style="color:#059669;border-color:#A7F3D0;background:#ECFDF5">60–70% Max HR</span>
             </div>
             <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
@@ -935,11 +1013,11 @@ input[type="number"]:focus {
         <!-- Zone 3 -->
         <div class="g-card" id="gc3">
           <div class="g-card-header" onclick="toggleCard('gc3')">
-            <div class="g-dot" style="color:#FBBF24;background:#FBBF24"></div>
+            <div class="g-dot" style="background:#FBBF24"></div>
             <div class="g-info">
               <span class="g-zone-num">Zone 3</span>
               <span class="g-zone-name">Aerobic</span>
-              <span class="g-pct-badge" style="color:#FBBF24;border-color:#FBBF2444;background:rgba(251,191,36,0.08)">70–80% Max HR</span>
+              <span class="g-pct-badge" style="color:#B45309;border-color:#FDE68A;background:#FFFBEB">70–80% Max HR</span>
             </div>
             <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
@@ -951,7 +1029,7 @@ input[type="number"]:focus {
                 <div class="g-meta-item"><span class="g-meta-key">Best For</span><span class="g-meta-val">Cardiovascular endurance, stamina</span></div>
                 <div class="g-meta-item"><span class="g-meta-key">Duration</span><span class="g-meta-val">20–60 min</span></div>
               </div>
-              <p class="g-desc">Zone 3 bridges fat burning and true cardio conditioning. Fat is still a significant fuel source, but carbohydrates begin to take over. Your heart and lungs are working noticeably harder — breathing becomes deeper and rhythmic. This zone improves VO2 max over time, increases cardiovascular efficiency, and burns a high total calorie count. Best used 2–3 days per week.</p>
+              <p class="g-desc">Zone 3 bridges fat burning and true cardio conditioning. Fat is still a significant fuel source, but carbohydrates begin to take over. Your heart and lungs are working noticeably harder — breathing becomes deeper and rhythmic. This zone improves VO2 max over time and burns a high total calorie count. Best used 2–3 days per week.</p>
               <div class="g-activities">
                 <span class="g-activity-tag">Steady-state run</span>
                 <span class="g-activity-tag">Moderate cycling</span>
@@ -967,11 +1045,11 @@ input[type="number"]:focus {
         <!-- Zone 4 -->
         <div class="g-card" id="gc4">
           <div class="g-card-header" onclick="toggleCard('gc4')">
-            <div class="g-dot" style="color:#FB923C;background:#FB923C"></div>
+            <div class="g-dot" style="background:#FB923C"></div>
             <div class="g-info">
               <span class="g-zone-num">Zone 4</span>
               <span class="g-zone-name">Threshold</span>
-              <span class="g-pct-badge" style="color:#FB923C;border-color:#FB923C44;background:rgba(251,146,60,0.08)">80–90% Max HR</span>
+              <span class="g-pct-badge" style="color:#C2410C;border-color:#FDBA74;background:#FFF7ED">80–90% Max HR</span>
             </div>
             <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
@@ -983,7 +1061,7 @@ input[type="number"]:focus {
                 <div class="g-meta-item"><span class="g-meta-key">Best For</span><span class="g-meta-val">Speed, performance, HIIT</span></div>
                 <div class="g-meta-item"><span class="g-meta-key">Duration</span><span class="g-meta-val">10–30 min (intervals)</span></div>
               </div>
-              <p class="g-desc">Zone 4 is where you push past your comfort zone. You're approaching your lactate threshold — the point where lactic acid accumulates faster than your body can clear it, causing that familiar burn. Carbohydrates become the dominant fuel. Training here raises your lactate threshold so you can sustain harder efforts longer. Keep sessions to 1–2 times per week; recovery is essential.</p>
+              <p class="g-desc">Zone 4 is where you push past your comfort zone. You're approaching your lactate threshold — the point where lactic acid accumulates faster than your body can clear it, causing that familiar burn. Training here raises your threshold so you can sustain harder efforts longer. Keep sessions to 1–2 times per week; recovery is essential.</p>
               <div class="g-activities">
                 <span class="g-activity-tag">HIIT intervals</span>
                 <span class="g-activity-tag">Tempo run</span>
@@ -999,11 +1077,11 @@ input[type="number"]:focus {
         <!-- Zone 5 -->
         <div class="g-card" id="gc5">
           <div class="g-card-header" onclick="toggleCard('gc5')">
-            <div class="g-dot" style="color:#F87171;background:#F87171"></div>
+            <div class="g-dot" style="background:#F87171"></div>
             <div class="g-info">
               <span class="g-zone-num">Zone 5</span>
               <span class="g-zone-name">Max Effort</span>
-              <span class="g-pct-badge" style="color:#F87171;border-color:#F8717144;background:rgba(248,113,113,0.08)">90–100% Max HR</span>
+              <span class="g-pct-badge" style="color:#DC2626;border-color:#FECACA;background:#FEF2F2">90–100% Max HR</span>
             </div>
             <svg class="g-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
@@ -1015,7 +1093,7 @@ input[type="number"]:focus {
                 <div class="g-meta-item"><span class="g-meta-key">Best For</span><span class="g-meta-val">Peak power, sprint capacity</span></div>
                 <div class="g-meta-item"><span class="g-meta-key">Duration</span><span class="g-meta-val">10–60 seconds at a time</span></div>
               </div>
-              <p class="g-desc">Zone 5 is true maximum effort — an unsustainable intensity you can only hold for seconds to a minute at most. Your anaerobic system is dominant, glycogen burns at maximum rate, and lactic acid floods your muscles rapidly. This zone develops explosive power, fast-twitch muscle recruitment, and peak athletic performance. It is not a fat-burning zone. Full recovery between efforts is non-negotiable.</p>
+              <p class="g-desc">Zone 5 is true maximum effort — an unsustainable intensity you can only hold for seconds to a minute at most. Your anaerobic system is dominant, glycogen burns at maximum rate, and lactic acid floods your muscles rapidly. This zone develops explosive power and peak athletic performance. Full recovery between efforts is non-negotiable.</p>
               <div class="g-activities">
                 <span class="g-activity-tag">All-out sprints</span>
                 <span class="g-activity-tag">Plyometrics</span>
@@ -1037,7 +1115,6 @@ input[type="number"]:focus {
     </p>
 
   </div>
-
 </div>
 
 <script>
@@ -1070,53 +1147,46 @@ function calculate() {
   const totalInches = feet * 12 + inches;
   const bmi = (703 * weight) / (totalInches * totalInches);
 
-  // Stats strip
-  const strip = document.getElementById('statsStrip');
-  strip.innerHTML = '';
-  [
-    { label: 'Age',    val: `${age} yrs` },
-    { label: 'Weight', val: `${weight} lbs` },
-    { label: 'Height', val: `${feet}'${inches}"` },
-    { label: 'Sex',    val: gender === 'male' ? 'Male' : 'Female' },
-    { label: 'Max HR', val: `${maxHR} bpm`, highlight: true },
-  ].forEach(c => {
-    const el = document.createElement('div');
-    el.className = 'stat-chip' + (c.highlight ? ' highlight' : '');
-    el.innerHTML = `${c.label} <strong>${c.val}</strong>`;
-    strip.appendChild(el);
-  });
+  // Profile mini-stats
+  document.getElementById('statAge').textContent    = `${age}`;
+  document.getElementById('statWeight').textContent = `${weight}`;
+  document.getElementById('statHeight').textContent = `${feet}'${inches}"`;
+  document.getElementById('statSex').textContent    = gender === 'male' ? 'Male' : 'Female';
 
-  // Zone cards
+  // Max HR hero card
+  document.getElementById('maxHRValue').textContent  = maxHR;
+  document.getElementById('maxHRFormula').textContent = gender === 'female'
+    ? '206 − 0.88 × age'
+    : '220 − age';
+
+  // Zone rows
   const list = document.getElementById('zonesList');
   list.innerHTML = '';
   ZONES.forEach(z => {
     const bpmLow  = Math.round(maxHR * z.pctLow  / 100);
     const bpmHigh = Math.round(maxHR * z.pctHigh / 100);
-    const item = document.createElement('div');
-    item.className = 'zone-card';
-    item.innerHTML = `
-      <div class="zone-top-row">
-        <div class="zone-meta">
-          <div class="zone-num">${z.name}</div>
-          <div class="zone-name">${z.sub}</div>
-        </div>
-        <div class="zone-bpm">
-          <div class="bpm-range" style="color:${z.color}">${bpmLow}–${bpmHigh}</div>
-          <div class="bpm-unit-label">bpm</div>
-        </div>
+    const row = document.createElement('div');
+    row.className = 'zone-row';
+    row.innerHTML = `
+      <div class="zone-label-col">
+        <div class="zone-num">${z.name}</div>
+        <div class="zone-name">${z.sub}</div>
       </div>
-      <div class="bar-track">
+      <div class="bar-wrap">
         <div class="bar-fill" style="
-          width:0%;
           background:${z.isFat
-            ? `linear-gradient(90deg,${z.color}88,${z.color})`
-            : `linear-gradient(90deg,${z.color}44,${z.color}88)`};
-          ${z.isFat ? `box-shadow:0 0 20px ${z.color}33;` : ''}
+            ? `linear-gradient(90deg,${z.color}99,${z.color})`
+            : `linear-gradient(90deg,${z.color}66,${z.color}cc)`};
+          width:0%
         " data-target="${z.pctHigh}"></div>
-        <div class="bar-text">${z.pctLow}–${z.pctHigh}% · ${z.desc}</div>
+        <div class="bar-inner-text">${z.pctLow}–${z.pctHigh}% · ${z.desc}</div>
+      </div>
+      <div class="bpm-col">
+        <div class="bpm-val" style="color:${z.color}">${bpmLow}–${bpmHigh}</div>
+        <div class="bpm-suffix">bpm</div>
       </div>
     `;
-    list.appendChild(item);
+    list.appendChild(row);
   });
 
   setTimeout(() => {
@@ -1133,7 +1203,7 @@ function calculate() {
     : 'jogging, cycling, or rowing';
   document.getElementById('fatBannerBody').innerHTML = `
     Target <span class="hi">${fatLow}–${fatHigh} bpm</span> for peak fat oxidation.
-    At this intensity, your body preferentially uses fat as fuel over carbs.
+    At this intensity your body preferentially burns fat over carbs.
     Recommended: <span class="hi">${activityTip}</span>.
     Aim for <span class="hi">30–60 min</span> at this pace, 4–5× per week.
   `;
@@ -1143,7 +1213,7 @@ function calculate() {
   document.getElementById('bmiVal').textContent = bmiRounded;
   const bmiPct = Math.min(100, Math.max(0, ((bmi - 16) / 24) * 100));
   document.getElementById('bmiMarker').style.left = bmiPct + '%';
-  const bmiColor = bmi < 18.5 ? '#60A5FA' : bmi < 25 ? '#34D399' : bmi < 30 ? '#FBBF24' : '#F87171';
+  const bmiColor = bmi < 18.5 ? '#2563EB' : bmi < 25 ? '#16A34A' : bmi < 30 ? '#D97706' : '#DC2626';
   document.getElementById('bmiVal').style.color = bmiColor;
 
   // Show results
