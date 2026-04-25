@@ -1244,18 +1244,28 @@ function calculate() {
   const bmiColor = bmi < 18.5 ? '#2563EB' : bmi < 25 ? '#16A34A' : bmi < 30 ? '#D97706' : '#DC2626';
   document.getElementById('bmiVal').style.color = bmiColor;
 
+  // Save to localStorage
+  localStorage.setItem('hrzone_age',    age);
+  localStorage.setItem('hrzone_weight', weight);
+  localStorage.setItem('hrzone_feet',   feet);
+  localStorage.setItem('hrzone_inches', inches);
+  localStorage.setItem('hrzone_gender', gender);
+
   // Show results and scroll to zones
   const results = document.getElementById('results');
   const wasVisible = results.classList.contains('visible');
   results.classList.add('visible');
   if (!wasVisible) {
     setTimeout(() => {
-      document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      results.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 50);
   }
 }
 
 function clearAll() {
+  ['hrzone_age','hrzone_weight','hrzone_feet','hrzone_inches','hrzone_gender']
+    .forEach(k => localStorage.removeItem(k));
+
   document.getElementById('age').value    = '';
   document.getElementById('weight').value = '';
   document.getElementById('feet').value   = '';
@@ -1270,7 +1280,20 @@ function toggleCard(id) {
 }
 
 window.addEventListener('load', () => {
-  localStorage.clear();
+  const age    = localStorage.getItem('hrzone_age');
+  const weight = localStorage.getItem('hrzone_weight');
+  const feet   = localStorage.getItem('hrzone_feet');
+  const inches = localStorage.getItem('hrzone_inches');
+  const g      = localStorage.getItem('hrzone_gender');
+
+  if (age && weight && feet && inches) {
+    document.getElementById('age').value    = age;
+    document.getElementById('weight').value = weight;
+    document.getElementById('feet').value   = feet;
+    document.getElementById('inches').value = inches;
+    if (g) setGender(g);
+    calculate();
+  }
 });
 </script>
 </body>
