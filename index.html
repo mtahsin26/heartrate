@@ -497,12 +497,9 @@ input[type="number"].input-error {
   margin-top: 2px;
 }
 
-/* ─── BENTO ROW 3: FAT + BMI ─── */
+/* ─── BENTO ROW 3: FAT ─── */
 .bento-bottom {
-  display: grid;
-  grid-template-columns: 3fr 2fr;
-  gap: var(--sp-4);
-  align-items: stretch;
+  display: flex;
 }
 
 /* Fat burn card */
@@ -552,56 +549,6 @@ input[type="number"].input-error {
   font-weight: 700;
 }
 
-/* BMI card */
-.bmi-card {
-  padding: var(--sp-6);
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-4);
-}
-
-.bmi-top-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-}
-
-.bmi-num {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 32px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
-
-.bmi-scale {
-  position: relative;
-  height: 8px;
-  border-radius: 8px;
-  background: linear-gradient(90deg, #60A5FA 0%, #34D399 25%, #FBBF24 50%, #FB923C 75%, #F87171 100%);
-}
-
-.bmi-marker {
-  position: absolute;
-  top: -5px;
-  width: 18px;
-  height: 18px;
-  background: white;
-  border-radius: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0 0 0 2.5px rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.18);
-  transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.bmi-ticks {
-  display: flex;
-  justify-content: space-between;
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--muted);
-  letter-spacing: 0.02em;
-  margin-top: -8px;
-}
 
 /* ─── GLOSSARY ─── */
 .glossary-section {
@@ -815,9 +762,7 @@ input[type="number"].input-error {
 
   .g-row { grid-template-columns: 1fr; }
 
-  .bmi-ticks { font-size: 9px; }
-
-  h1 { font-size: 2.4rem; }
+h1 { font-size: 2.4rem; }
 }
 
 @media (max-width: 400px) {
@@ -940,9 +885,8 @@ input[type="number"].input-error {
       <div class="zones-list" id="zonesList"></div>
     </div>
 
-    <!-- Row 3: Fat Burn + BMI -->
+    <!-- Row 3: Fat Burn -->
     <div class="bento-bottom">
-
       <div class="card fat-card">
         <div class="fat-icon-row">
           <div class="fat-icon">🔥</div>
@@ -950,23 +894,6 @@ input[type="number"].input-error {
         </div>
         <div class="fat-body" id="fatBannerBody"></div>
       </div>
-
-      <div class="card bmi-card">
-        <div class="bmi-top-row">
-          <span class="card-label">BMI</span>
-          <span class="bmi-num" id="bmiVal">—</span>
-        </div>
-        <div class="bmi-scale">
-          <div class="bmi-marker" id="bmiMarker" style="left:0%"></div>
-        </div>
-        <div class="bmi-ticks">
-          <span>Under</span>
-          <span>Normal</span>
-          <span>Over</span>
-          <span>Obese</span>
-        </div>
-      </div>
-
     </div>
 
     <!-- GLOSSARY -->
@@ -1187,7 +1114,6 @@ function calculate() {
     : Math.round(220 - age);
 
   const totalInches = feet * 12 + inches;
-  const bmi = (703 * weight) / (totalInches * totalInches);
 
   // Profile mini-stats
   document.getElementById('statAge').textContent    = `${age}`;
@@ -1247,15 +1173,7 @@ function calculate() {
     Aim for <span class="hi">30–60 min</span> at this pace, 4–5× per week.
   `;
 
-  // BMI
-  const bmiRounded = bmi.toFixed(1);
-  document.getElementById('bmiVal').textContent = bmiRounded;
-  const bmiPct = Math.min(100, Math.max(0, ((bmi - 16) / 24) * 100));
-  document.getElementById('bmiMarker').style.left = bmiPct + '%';
-  const bmiColor = bmi < 18.5 ? '#2563EB' : bmi < 25 ? '#16A34A' : bmi < 30 ? '#D97706' : '#DC2626';
-  document.getElementById('bmiVal').style.color = bmiColor;
-
-  // Save to localStorage (only reaches here after successful calculate)
+// Save to localStorage (only reaches here after successful calculate)
   localStorage.setItem('hrzone_age',     age);
   localStorage.setItem('hrzone_weight',  weight);
   localStorage.setItem('hrzone_feet',    feet);
