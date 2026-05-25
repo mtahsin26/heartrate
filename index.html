@@ -1142,7 +1142,7 @@ input[type="number"].input-error {
     <!-- END GLOSSARY -->
 
     <p class="disclaimer">
-      Max HR estimated via 220 − age (Tanaka formula for females: 206 − 0.88 × age).<br>
+      Max HR estimated (Tanaka formula for females: 206 − 0.88 × age).<br>
       Individual max HR varies ±10–20 bpm. Consult a physician before starting a new exercise program.
     </p>
 
@@ -1197,9 +1197,6 @@ function calculate() {
 
   // Max HR hero card
   document.getElementById('maxHRValue').textContent  = maxHR;
-  document.getElementById('maxHRFormula').textContent = gender === 'female'
-    ? '206 − 0.88 × age'
-    : '220 − age';
 
   // Zone rows
   const list = document.getElementById('zonesList');
